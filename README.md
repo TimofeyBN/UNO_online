@@ -32,13 +32,11 @@
 
 Ограничения уникальности: `(game_id, user_id)`, `(game_id, position)`, `code` у games.
 
-Подробное ТЗ с диаграммами — в `docs/tz-uno-online.pdf` (или отдельным файлом в репозитории).
-
 ## Установка и запуск
 
 ```bash
-git clone <ссылка-на-репозиторий>
-cd uno-online
+git clone https://github.com/TimofeyBN/UNO_online.git
+cd UNO_online
 
 # зависимости
 bundle install
@@ -52,15 +50,6 @@ bin/dev
 ```
 
 Приложение будет доступно на `http://localhost:3000`.
-
-### Переменные окружения
-
-Создай файл `.env` (не коммитить в git):
-
-```
-DATABASE_URL=postgres://localhost/uno_online_development
-RAILS_MASTER_KEY=<из config/master.key>
-```
 
 ## Структура проекта
 
@@ -87,4 +76,4 @@ db/
 
 ## Авторы
 
-Тимофей — [учебный проект]
+Тимофей Батраков — TimofeyBN
