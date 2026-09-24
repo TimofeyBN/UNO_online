@@ -42,14 +42,14 @@ cd UNO_online
 bundle install
 
 # база данных
-rails db:create
-rails db:migrate
+bundle exec rails db:create
+bundle exec rails db:migrate
 
 # запуск
-bin/dev
+bundle exec rails server
 ```
 
-Приложение будет доступно на `http://localhost:3000`.
+Приложение будет доступно на `http://127.0.0.1:3000/`.
 
 ## Структура проекта
 
