@@ -9,7 +9,7 @@
 | Backend | Ruby on Rails |
 | Реалтайм | ActionCable (WebSocket) |
 | Frontend | JS (Stimulus / ванильный JS), CSS-анимации, GSAP для сложных переходов карт |
-| БД | PostgreSQL / SQLite |
+| БД | PostgreSQL |
 
 ## Возможности
 
