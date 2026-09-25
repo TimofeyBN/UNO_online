@@ -1,0 +1,40 @@
+<% content_for :title, "Вход — Uno Online" %>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-card__header">
+      <%= render "shared/logo", size: "lg" %>
+    </div>
+
+    <nav class="auth-tabs">
+      <%= link_to "Войти", login_path, class: "auth-tabs__item is-active" %>
+      <%= link_to "Регистрация", register_path, class: "auth-tabs__item" %>
+    </nav>
+
+    <%= form_with url: login_path, method: :post, local: true,
+                   data: { controller: "auth-form", auth_form_mode_value: "login" },
+                   class: "auth-form" do |f| %>
+
+      <div class="field">
+        <label class="field__label" for="email">Email</label>
+        <%= f.email_field :email, id: "email", placeholder: "you@example.com",
+                           class: "field__input", data: { auth_form_target: "email" } %>
+        <span class="field__error"></span>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="password">Пароль</label>
+        <%= f.password_field :password, id: "password", placeholder: "Ваш пароль",
+                              class: "field__input", data: { auth_form_target: "password" } %>
+        <span class="field__error"></span>
+      </div>
+
+      <%= f.submit "Войти", class: "btn btn--primary btn--full",
+                    data: { auth_form_target: "submit", action: "click->auth-form#validate" } %>
+    <% end %>
+
+    <p class="auth-card__switch">
+      Нет аккаунта? <%= link_to "Зарегистрироваться", register_path %>
+    </p>
+  </div>
+</div>

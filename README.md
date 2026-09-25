@@ -41,6 +41,8 @@ cd UNO_online
 # зависимости
 bundle install
 
+set DISABLE_BOOTSNAP=1
+
 # база данных
 bundle exec rails db:create
 bundle exec rails db:migrate

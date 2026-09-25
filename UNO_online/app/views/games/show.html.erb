@@ -1,0 +1,18 @@
+<% content_for :title, "Комната #{@game.code} — Uno Online" %>
+
+<div class="main-page">
+  <header class="main-header">
+    <%= render "shared/logo" %>
+    <%= link_to "← К списку комнат", root_path, class: "main-header__logout" %>
+  </header>
+
+  <div class="main-content">
+    <h1>Комната <%= @game.code %></h1>
+    <p style="color: var(--text-muted)">
+      Игроков: <%= @game.players.size %>/<%= Game::MAX_PLAYERS %> · статус: <%= @game.status %>
+    </p>
+    <p style="color: var(--text-faint); margin-top: var(--space-4)">
+      Экран лобби и игровой стол в разработке.
+    </p>
+  </div>
+</div>

@@ -1,10 +1,277 @@
 /*
- * This is a manifest file that'll be compiled into application.css.
- *
- * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
- * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
- * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
- * depending on specificity.
- *
- * Consider organizing styles into separate files for maintainability.
+ * Uno Online — стили приложения.
+ * Пока без сборщика (importmap-rails), поэтому дизайн-токены,
+ * сброс и стили компонентов/страниц собраны в одном файле.
  */
+
+:root {
+  /* поверхности */
+  --bg: #131219;
+  --bg-elevated: #1C1B25;
+  --bg-elevated-2: #24222F;
+  --border: #33313F;
+  --border-soft: #26242F;
+
+  /* текст */
+  --text: #F1EFEA;
+  --text-muted: #928FA0;
+  --text-faint: #625F70;
+
+  /* цвета мастей Uno — используются точечно, не как фон */
+  --suit-red: #E14B4B;
+  --suit-yellow: #E8B23D;
+  --suit-green: #3FA65C;
+  --suit-blue: #3E7FE0;
+
+  /* основное действие */
+  --primary: var(--suit-blue);
+  --primary-hover: #5A93E8;
+  --primary-text: #0A0E17;
+
+  /* статусы */
+  --danger: var(--suit-red);
+  --success: var(--suit-green);
+
+  /* типографика */
+  --font-display: "Baloo 2", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+
+  /* радиусы и тени */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
+
+  /* сетка отступов */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+}
+
+/* --- сброс --- */
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { font-family: var(--font-display); margin: 0; }
+p { margin: 0; }
+button { font-family: inherit; }
+a { color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* --- флэш-сообщения --- */
+.flash {
+  position: fixed;
+  top: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 500;
+  box-shadow: var(--shadow-card);
+}
+.flash--notice { background: var(--success); color: #0A170D; }
+.flash--alert { background: var(--danger); color: #1A0808; }
+
+/* ============ компоненты (UI-kit) ============ */
+
+/* Кнопка */
+.btn {
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 12px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease, opacity 0.15s ease;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+}
+.btn:active { transform: scale(0.98); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn--full { width: 100%; }
+
+.btn--primary { background: var(--primary); color: var(--primary-text); }
+.btn--primary:hover:not(:disabled) { background: var(--primary-hover); }
+
+.btn--secondary { background: var(--bg-elevated-2); color: var(--text); border: 1px solid var(--border); }
+.btn--secondary:hover:not(:disabled) { background: var(--bg-elevated); border-color: var(--text-faint); }
+
+.btn--ghost { background: transparent; color: var(--text-muted); padding: 8px 12px; }
+.btn--ghost:hover:not(:disabled) { color: var(--text); }
+
+/* Текстовое поле */
+.field { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+.field__label { font-size: 0.82rem; color: var(--text-muted); font-weight: 500; }
+.field__input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  color: var(--text);
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  transition: border-color 0.15s ease;
+  width: 100%;
+}
+.field__input::placeholder { color: var(--text-faint); }
+.field__input:focus { outline: none; border-color: var(--primary); }
+.field__input--error { border-color: var(--danger); }
+.field__error { font-size: 0.78rem; color: var(--danger); }
+
+/* Логотип */
+.logo { display: inline-flex; align-items: center; gap: 10px; }
+.logo__mark {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3px;
+  width: 26px;
+  height: 26px;
+}
+.logo__dot { border-radius: 3px; }
+.logo__text { font-family: var(--font-display); font-weight: 700; color: var(--text); }
+.logo--md .logo__text { font-size: 1.15rem; }
+.logo--lg .logo__mark { width: 38px; height: 38px; }
+.logo--lg .logo__dot { border-radius: 5px; }
+.logo--lg .logo__text { font-size: 1.6rem; }
+
+/* Карточка комнаты */
+.room-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+}
+.room-card__name { font-weight: 600; margin-bottom: 2px; }
+.room-card__meta { font-size: 0.82rem; color: var(--text-muted); }
+.room-card__code { color: var(--text-faint); }
+
+/* ============ страница: авторизация/регистрация ============ */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  background:
+    radial-gradient(circle at 15% 20%, rgba(225, 75, 75, 0.08), transparent 40%),
+    radial-gradient(circle at 85% 15%, rgba(62, 127, 224, 0.08), transparent 40%),
+    radial-gradient(circle at 50% 90%, rgba(63, 166, 92, 0.06), transparent 45%),
+    var(--bg);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-6) var(--space-5);
+}
+
+.auth-card__header { display: flex; justify-content: center; margin-bottom: var(--space-6); }
+
+.auth-tabs {
+  display: flex;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  margin-bottom: var(--space-5);
+}
+.auth-tabs__item {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 9px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.auth-tabs__item.is-active { background: var(--bg-elevated-2); color: var(--text); }
+
+.auth-form { display: flex; flex-direction: column; gap: var(--space-4); }
+.auth-form__error { color: var(--danger); font-size: 0.85rem; margin: -4px 0 0; }
+
+.auth-card__switch { margin-top: var(--space-5); text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+.auth-card__switch a { color: var(--primary); font-weight: 600; text-decoration: none; }
+.auth-card__switch a:hover { text-decoration: underline; }
+
+/* ============ страница: главная / список комнат ============ */
+.main-page { min-height: 100vh; background: var(--bg); }
+
+.main-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--border-soft);
+}
+.main-header__user { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-muted); }
+.main-header__avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--bg-elevated-2);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+.main-header__logout {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.main-header__logout:hover { color: var(--text-muted); }
+
+.main-content {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5) var(--space-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.main-actions { display: flex; flex-direction: column; gap: var(--space-3); }
+.join-form { display: flex; gap: var(--space-2); align-items: flex-start; }
+.join-form .field { flex: 1; }
+
+.room-list__title { font-size: 1rem; font-weight: 600; margin-bottom: var(--space-3); color: var(--text-muted); }
+.room-list__items { display: flex; flex-direction: column; gap: var(--space-3); }
+.room-list__empty { color: var(--text-faint); font-size: 0.9rem; }

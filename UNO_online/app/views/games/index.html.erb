@@ -1,0 +1,55 @@
+<% content_for :title, "Uno Online" %>
+
+<div class="main-page">
+  <header class="main-header">
+    <%= render "shared/logo" %>
+    <div class="main-header__user">
+      <span class="main-header__avatar"><%= current_user.name.first.upcase %></span>
+      <span><%= current_user.name %></span>
+      <%= button_to "Выйти", logout_path, method: :delete, class: "main-header__logout" %>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <section class="main-actions">
+      <%= button_to "Создать комнату", games_path, method: :post, class: "btn btn--primary btn--full" %>
+
+      <%= form_with url: join_games_path, method: :post, local: true, class: "join-form" do |f| %>
+        <div class="field">
+          <%= f.text_field :code, placeholder: "Введите код комнаты", class: "field__input" %>
+        </div>
+        <%= f.submit "Войти", class: "btn btn--secondary" %>
+      <% end %>
+    </section>
+
+    <section class="room-list">
+      <h2 class="room-list__title">Активные комнаты</h2>
+
+      <% if @games.empty? %>
+        <p class="room-list__empty">Пока нет активных комнат — создайте первую.</p>
+      <% else %>
+        <div class="room-list__items">
+          <% @games.each do |game| %>
+            <div class="room-card">
+              <div class="room-card__info">
+                <p class="room-card__name">Комната <%= game.code %></p>
+                <p class="room-card__meta">
+                  <%= game.players.size %>/<%= Game::MAX_PLAYERS %> игроков
+                </p>
+              </div>
+              <% if game.players.exists?(user: current_user) %>
+                <%= link_to "Продолжить", game_path(game), class: "btn btn--secondary" %>
+              <% elsif game.status == "playing" %>
+                <span class="btn btn--secondary" aria-disabled="true">Идёт игра</span>
+              <% elsif game.full? %>
+                <span class="btn btn--secondary" aria-disabled="true">Заполнена</span>
+              <% else %>
+                <%= button_to "Войти", join_games_path(code: game.code), method: :post, class: "btn btn--secondary" %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </section>
+  </div>
+</div>

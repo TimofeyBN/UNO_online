@@ -1,0 +1,53 @@
+<% content_for :title, "Регистрация — Uno Online" %>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-card__header">
+      <%= render "shared/logo", size: "lg" %>
+    </div>
+
+    <nav class="auth-tabs">
+      <%= link_to "Войти", login_path, class: "auth-tabs__item" %>
+      <%= link_to "Регистрация", register_path, class: "auth-tabs__item is-active" %>
+    </nav>
+
+    <%= form_with model: @user, url: register_path, local: true,
+                   data: { controller: "auth-form", auth_form_mode_value: "register" },
+                   class: "auth-form" do |f| %>
+
+      <% if @user.errors.any? %>
+        <p class="auth-form__error">
+          <%= @user.errors.full_messages.to_sentence %>
+        </p>
+      <% end %>
+
+      <div class="field">
+        <label class="field__label" for="user_name">Имя</label>
+        <%= f.text_field :name, id: "user_name", placeholder: "Как вас называть",
+                          class: "field__input", data: { auth_form_target: "name" } %>
+        <span class="field__error"></span>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="user_email">Email</label>
+        <%= f.email_field :email, id: "user_email", placeholder: "you@example.com",
+                           class: "field__input", data: { auth_form_target: "email" } %>
+        <span class="field__error"></span>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="user_password">Пароль</label>
+        <%= f.password_field :password, id: "user_password", placeholder: "Минимум 6 символов",
+                              class: "field__input", data: { auth_form_target: "password" } %>
+        <span class="field__error"></span>
+      </div>
+
+      <%= f.submit "Создать аккаунт", class: "btn btn--primary btn--full",
+                    data: { auth_form_target: "submit", action: "click->auth-form#validate" } %>
+    <% end %>
+
+    <p class="auth-card__switch">
+      Уже есть аккаунт? <%= link_to "Войти", login_path %>
+    </p>
+  </div>
+</div>
