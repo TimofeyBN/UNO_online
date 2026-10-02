@@ -36,5 +36,7 @@
     <% end %>
 
     <%= yield %>
+
+    <%= link_to "UI-kit", ui_kit_path, class: "ui-kit-corner-link" if current_page?(register_path) %>
   </body>
 </html>

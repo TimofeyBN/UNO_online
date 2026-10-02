@@ -11,30 +11,65 @@
   </header>
 
   <div class="main-content">
-    <section class="main-actions">
-      <%= button_to "Создать комнату", games_path, method: :post, class: "btn btn--primary btn--full" %>
+    <section class="create-room">
+      <h2 class="room-list__title">Создать комнату</h2>
 
+      <%= form_with url: games_path, method: :post, local: true, class: "create-room-form" do %>
+        <div class="field-row">
+          <div class="field">
+            <span class="field__label">Видимость</span>
+            <div class="radio-group">
+              <label class="radio-option">
+                <%= radio_button_tag :visibility, "public", true %>
+                Публичная
+              </label>
+              <label class="radio-option">
+                <%= radio_button_tag :visibility, "private", false %>
+                Приватная (по коду)
+              </label>
+            </div>
+          </div>
+
+          <div class="field field--narrow">
+            <label class="field__label" for="max_players">Игроков</label>
+            <select name="max_players" id="max_players" class="field__input">
+              <% Game::PLAYERS_RANGE.each do |n| %>
+                <option value="<%= n %>" <%= "selected" if n == 4 %>><%= n %></option>
+              <% end %>
+            </select>
+          </div>
+        </div>
+
+        <%= submit_tag "Создать комнату", class: "btn btn--primary btn--full" %>
+      <% end %>
+    </section>
+
+    <section class="join-room">
+      <h2 class="room-list__title">Войти по коду</h2>
       <%= form_with url: join_games_path, method: :post, local: true, class: "join-form" do |f| %>
         <div class="field">
-          <%= f.text_field :code, placeholder: "Введите код комнаты", class: "field__input" %>
+          <%= f.text_field :code, placeholder: "Например, 7F3A9K", class: "field__input" %>
         </div>
         <%= f.submit "Войти", class: "btn btn--secondary" %>
       <% end %>
     </section>
 
     <section class="room-list">
-      <h2 class="room-list__title">Активные комнаты</h2>
+      <h2 class="room-list__title">Публичные комнаты</h2>
 
-      <% if @games.empty? %>
-        <p class="room-list__empty">Пока нет активных комнат — создайте первую.</p>
+      <% if @public_games.empty? %>
+        <p class="room-list__empty">Пока нет публичных комнат — создайте первую.</p>
       <% else %>
         <div class="room-list__items">
-          <% @games.each do |game| %>
+          <% @public_games.each do |game| %>
             <div class="room-card">
               <div class="room-card__info">
-                <p class="room-card__name">Комната <%= game.code %></p>
+                <p class="room-card__name">
+                  Комната <%= game.code %>
+                  <%= render "shared/status_badge", status: game.status %>
+                </p>
                 <p class="room-card__meta">
-                  <%= game.players.size %>/<%= Game::MAX_PLAYERS %> игроков
+                  <%= game.players.size %>/<%= game.max_players %> игроков
                 </p>
               </div>
               <% if game.players.exists?(user: current_user) %>

@@ -1,0 +1,99 @@
+<% content_for :title, "UI-kit — Uno Online" %>
+
+<div class="main-page">
+  <header class="main-header">
+    <%= render "shared/logo" %>
+    <%= link_to "← На главную", root_path, class: "main-header__logout" %>
+  </header>
+
+  <div class="main-content" style="max-width: 720px;">
+    <h1>UI-kit</h1>
+    <p class="room-card__meta" style="margin-bottom: var(--space-6)">
+      Переиспользуемые компоненты интерфейса Uno Online
+    </p>
+
+    <section style="margin-bottom: var(--space-6)">
+      <h2 class="room-list__title">Логотип</h2>
+      <%= render "shared/logo", size: "lg" %>
+    </section>
+
+    <section style="margin-bottom: var(--space-6)">
+      <h2 class="room-list__title">Кнопки</h2>
+      <div style="display: flex; gap: var(--space-3); flex-wrap: wrap; align-items: center;">
+        <button class="btn btn--primary">Основная</button>
+        <button class="btn btn--secondary">Вторичная</button>
+        <button class="btn btn--ghost">Ghost</button>
+        <button class="btn btn--primary" disabled>Основная (disabled)</button>
+      </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-6)">
+      <h2 class="room-list__title">Поля ввода</h2>
+      <div style="display: flex; flex-direction: column; gap: var(--space-4); max-width: 320px;">
+        <div class="field">
+          <span class="field__label">Email</span>
+          <input class="field__input" placeholder="you@example.com">
+        </div>
+        <div class="field">
+          <span class="field__label">Пароль</span>
+          <input class="field__input field__input--error" value="123">
+          <span class="field__error">Минимум 6 символов</span>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-6)">
+      <h2 class="room-list__title">Радиокнопки</h2>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="demo-visibility" checked> Публичная</label>
+        <label class="radio-option"><input type="radio" name="demo-visibility"> Приватная (по коду)</label>
+      </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-6)">
+      <h2 class="room-list__title">Статусы комнаты</h2>
+      <div style="display: flex; gap: var(--space-3);">
+        <%= render "shared/status_badge", status: "waiting" %>
+        <%= render "shared/status_badge", status: "playing" %>
+        <%= render "shared/status_badge", status: "finished" %>
+      </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-6)">
+      <h2 class="room-list__title">Карточка комнаты</h2>
+      <div class="room-card" style="max-width: 420px;">
+        <div class="room-card__info">
+          <p class="room-card__name">
+            Комната 7F3A9K <%= render "shared/status_badge", status: "waiting" %>
+          </p>
+          <p class="room-card__meta">2/4 игроков</p>
+        </div>
+        <button class="btn btn--secondary">Войти</button>
+      </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-6)">
+      <h2 class="room-list__title">Строка игрока (лобби)</h2>
+      <ul class="player-list" style="max-width: 420px;">
+        <li class="player-row">
+          <span class="player-row__name">Тимофей <span class="player-row__crown">👑</span></span>
+          <span class="ready-pill is-ready">Готов</span>
+        </li>
+        <li class="player-row">
+          <span class="player-row__name">Арсен</span>
+          <span class="ready-pill">Не готов</span>
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="room-list__title">Цветовая палитра</h2>
+      <div style="display: flex; gap: var(--space-3);">
+        <div style="width: 56px; height: 56px; border-radius: var(--radius-sm); background: var(--suit-red);"></div>
+        <div style="width: 56px; height: 56px; border-radius: var(--radius-sm); background: var(--suit-yellow);"></div>
+        <div style="width: 56px; height: 56px; border-radius: var(--radius-sm); background: var(--suit-green);"></div>
+        <div style="width: 56px; height: 56px; border-radius: var(--radius-sm); background: var(--suit-blue);"></div>
+      </div>
+    </section>
+  </div>
+</div>

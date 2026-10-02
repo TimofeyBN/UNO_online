@@ -1,0 +1,18 @@
+<% content_for :title, "Игра #{@game.code} — Uno Online" %>
+
+<div class="main-page" data-controller="lobby-poll">
+  <header class="main-header">
+    <%= render "shared/logo" %>
+    <%= button_to "Покинуть комнату", leave_game_path(@game), method: :post, class: "main-header__logout" %>
+  </header>
+
+  <div class="main-content">
+    <h1>Комната <%= @game.code %></h1>
+    <p class="room-card__meta"><%= render "shared/status_badge", status: @game.status %></p>
+
+    <p style="color: var(--text-faint); margin-top: var(--space-5)">
+      Игровой стол — следующий этап разработки. Все <%= @game.players.size %> игроков
+      подтвердили готовность, партия считается начатой.
+    </p>
+  </div>
+</div>

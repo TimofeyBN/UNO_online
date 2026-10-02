@@ -1,0 +1,4 @@
+<%
+  labels = { "waiting" => "Ожидание", "playing" => "Идёт игра", "finished" => "Завершена" }
+%>
+<span class="status-badge status-badge--<%= status %>"><%= labels.fetch(status, status) %></span>

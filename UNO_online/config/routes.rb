@@ -4,6 +4,8 @@ Rails.application.routes.draw do
 
   root "games#index"
 
+  get "ui-kit", to: "pages#ui_kit"
+
   get "register", to: "registrations#new"
   post "register", to: "registrations#create"
 
@@ -11,7 +13,12 @@ Rails.application.routes.draw do
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy"
 
-  resources :games, only: %i[index create show] do
+  resources :games, only: %i[index create show destroy] do
+    member do
+      post :ready
+      post :leave
+      get :play
+    end
     collection do
       post :join
     end

@@ -1,18 +1,56 @@
 <% content_for :title, "Комната #{@game.code} — Uno Online" %>
 
-<div class="main-page">
+<div class="main-page" <%= "data-controller=\"lobby-poll\"".html_safe if @game.status == "waiting" %>>
   <header class="main-header">
     <%= render "shared/logo" %>
     <%= link_to "← К списку комнат", root_path, class: "main-header__logout" %>
   </header>
 
   <div class="main-content">
-    <h1>Комната <%= @game.code %></h1>
-    <p style="color: var(--text-muted)">
-      Игроков: <%= @game.players.size %>/<%= Game::MAX_PLAYERS %> · статус: <%= @game.status %>
-    </p>
-    <p style="color: var(--text-faint); margin-top: var(--space-4)">
-      Экран лобби и игровой стол в разработке.
-    </p>
+    <div class="lobby-header">
+      <div>
+        <h1>Комната <%= @game.code %></h1>
+        <p class="room-card__meta">
+          <%= render "shared/status_badge", status: @game.status %>
+          · <%= @game.visibility == "private" ? "Приватная" : "Публичная" %>
+          · <%= @game.players.size %>/<%= @game.max_players %> игроков
+        </p>
+        <% if @game.status == "waiting" && @game.winner.present? %>
+          <p class="lobby-hint">🏆 Победитель прошлого раунда: <%= @game.winner.name %></p>
+        <% end %>
+      </div>
+      <% if @game.host_id == current_user.id %>
+        <%= button_to "Удалить комнату", game_path(@game), method: :delete,
+                       class: "btn btn--secondary",
+                       data: { turbo_confirm: "Удалить комнату для всех участников?" } %>
+      <% end %>
+    </div>
+
+    <ul class="player-list">
+      <% @game.players.each do |player| %>
+        <li class="player-row">
+          <span class="player-row__name">
+            <%= player.user.name %>
+            <% if player.user_id == @game.host_id %>
+              <span class="player-row__crown" title="Создатель комнаты">👑</span>
+            <% end %>
+          </span>
+          <span class="ready-pill <%= 'is-ready' if player.ready? %>">
+            <%= player.ready? ? "Готов" : "Не готов" %>
+          </span>
+        </li>
+      <% end %>
+    </ul>
+
+    <% if @game.status == "waiting" %>
+      <div class="lobby-actions">
+        <%= button_to(@my_player.ready? ? "Отменить готовность" : "Готов",
+                       ready_game_path(@game), method: :post,
+                       class: @my_player.ready? ? "btn btn--secondary btn--full" : "btn btn--primary btn--full") %>
+        <%= button_to "Покинуть комнату", leave_game_path(@game), method: :post,
+                       class: "btn btn--ghost" %>
+      </div>
+      <p class="lobby-hint">Игра начнётся автоматически, как только все участники нажмут «Готов» (нужно минимум 2 игрока).</p>
+    <% end %>
   </div>
 </div>

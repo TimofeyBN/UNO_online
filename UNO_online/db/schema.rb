@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_25_120003) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_25_120005) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -24,8 +24,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_25_120003) do
     t.bigint "winner_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "visibility", default: "public", null: false
+    t.integer "max_players", default: 4, null: false
+    t.bigint "host_id"
     t.index ["code"], name: "index_games_on_code", unique: true
     t.index ["current_player_id"], name: "index_games_on_current_player_id"
+    t.index ["host_id"], name: "index_games_on_host_id"
+    t.index ["visibility"], name: "index_games_on_visibility"
     t.index ["winner_id"], name: "index_games_on_winner_id"
   end
 
@@ -37,6 +42,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_25_120003) do
     t.boolean "has_called_uno", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "ready", default: false, null: false
     t.index ["game_id", "position"], name: "index_players_on_game_id_and_position", unique: true
     t.index ["game_id", "user_id"], name: "index_players_on_game_id_and_user_id", unique: true
     t.index ["game_id"], name: "index_players_on_game_id"
@@ -53,6 +59,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_25_120003) do
   end
 
   add_foreign_key "games", "players", column: "current_player_id"
+  add_foreign_key "games", "users", column: "host_id"
   add_foreign_key "games", "users", column: "winner_id"
   add_foreign_key "players", "games"
   add_foreign_key "players", "users"
