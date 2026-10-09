@@ -103,3 +103,21 @@ yarn-debug.log*
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
+
+# --- Приложение лежит в подпапке UNO_online/, поэтому правила выше (/log/*, /tmp/* и т.д.)
+# --- привязаны к корню репозитория и его не покрывают. Дублируем для подпапки.
+**/log/*
+!**/log/.keep
+**/tmp/*
+!**/tmp/.keep
+**/storage/*
+!**/storage/.keep
+**/config/master.key
+**/config/credentials/*.key
+**/.env
+**/.env*.local
+**/node_modules/
+
+# swap-файлы редакторов (Kate, Vim)
+*.swp
+.*.kate-swp

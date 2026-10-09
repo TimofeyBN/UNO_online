@@ -1,4 +1,10 @@
 class Game < ApplicationRecord
+  # Доменные ошибки — контроллер превращает их в понятные пользователю сообщения
+  class Error < StandardError; end
+  class RoomFull < Error; end
+  class GameInProgress < Error; end
+  class NotAPlayer < Error; end
+
   STATUSES = %w[waiting playing finished].freeze
   DIRECTIONS = %w[clockwise counterclockwise].freeze
   VISIBILITIES = %w[public private].freeze
@@ -21,6 +27,15 @@ class Game < ApplicationRecord
   }
 
   before_validation :generate_code, on: :create
+  # games.current_player_id ссылается на players, а players — на games:
+  # перед удалением комнаты нужно разорвать эту ссылку, иначе FK не даст удалить игроков
+  before_destroy :clear_current_player, prepend: true
+
+  scope :publicly_listed, -> { where(visibility: "public").order(created_at: :desc) }
+
+  STATUSES.each do |name|
+    define_method(:"#{name}?") { status == name }
+  end
 
   def full?
     players.count >= max_players
@@ -39,6 +54,31 @@ class Game < ApplicationRecord
     update!(status: "playing")
   end
 
+  # Добавляет игрока в комнату. Повторный вход уже состоящего игрока — не ошибка.
+  # Блокировка строки комнаты защищает от гонки за последнее свободное место.
+  def add_player!(user)
+    with_lock do
+      players.find_by(user: user) || begin
+        raise GameInProgress if playing?
+        raise RoomFull if full?
+
+        players.create!(user: user, position: next_position)
+      end
+    end
+  end
+
+  # Переключает готовность игрока; если готовы все — партия стартует.
+  def toggle_ready!(user)
+    with_lock do
+      player = players.find_by(user: user)
+      raise NotAPlayer unless player
+
+      player.update!(ready: !player.ready)
+      start! if waiting? && all_ready?
+      player
+    end
+  end
+
   # Убирает игрока из комнаты и разруливает последствия:
   # — если ушёл хост, право переходит следующему по позиции игроку
   # — если ушёл последний игрок, комната удаляется целиком
@@ -46,24 +86,28 @@ class Game < ApplicationRecord
   #   образом (все соперники сдались), комната возвращается в лобби
   # — оставшимся игрокам позиции уплотняются (0..n-1, без дыр)
   def remove_player!(user)
-    player = players.find_by(user: user)
-    return unless player
+    with_lock do
+      player = players.find_by(user: user)
+      settle_after_leaving!(player) if player
+    end
+  end
 
-    was_host = host_id == user.id
+  private
+
+  def settle_after_leaving!(player)
+    was_host = host_id == player.user_id
+    update!(current_player: nil) if current_player_id == player.id
     player.destroy!
     reload
 
     if players.none?
       destroy!
-      return
+    else
+      reassign_host! if was_host
+      reassign_positions!
+      conclude_by_forfeit! if playing? && players.one?
     end
-
-    reassign_host! if was_host
-    reassign_positions!
-    conclude_by_forfeit! if status == "playing" && players.one?
   end
-
-  private
 
   # Все соперники разошлись — последний оставшийся объявляется победителем,
   # комната откатывается в лобби (можно сразу собрать новую партию)
@@ -90,6 +134,10 @@ class Game < ApplicationRecord
       candidate = SecureRandom.alphanumeric(6).upcase
       break candidate unless Game.exists?(code: candidate)
     end
+  end
+
+  def clear_current_player
+    update_column(:current_player_id, nil) if current_player_id
   end
 
   def reassign_host!

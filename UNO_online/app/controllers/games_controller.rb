@@ -3,10 +3,12 @@ class GamesController < ApplicationController
   before_action :set_game, only: %i[show destroy ready leave play]
   before_action :require_membership, only: %i[show ready leave play]
 
+  rescue_from Game::NotAPlayer do
+    redirect_to root_path, alert: "Вы больше не в этой комнате"
+  end
+
   def index
-    @public_games = Game.where(visibility: "public")
-                         .order(created_at: :desc)
-                         .includes(:players)
+    @public_games = Game.publicly_listed.includes(:players)
   end
 
   def create
@@ -26,46 +28,36 @@ class GamesController < ApplicationController
 
     if game.nil?
       redirect_to root_path, alert: "Комната с таким кодом не найдена"
-    elsif game.players.exists?(user: current_user)
-      redirect_to game
-    elsif game.status == "playing"
-      redirect_to root_path, alert: "В этой комнате сейчас идёт игра, дождитесь её окончания"
-    elsif game.full?
-      redirect_to root_path, alert: "Комната уже заполнена"
     else
-      game.players.create!(user: current_user, position: game.next_position)
+      game.add_player!(current_user)
       redirect_to game
     end
+  rescue Game::GameInProgress
+    redirect_to root_path, alert: "В этой комнате сейчас идёт игра, дождитесь её окончания"
+  rescue Game::RoomFull
+    redirect_to root_path, alert: "Комната уже заполнена"
   end
 
   def show
-    redirect_to play_game_path(@game) and return if @game.status == "playing"
+    return redirect_to(play_game_path(@game)) if @game.playing?
 
     # Защита от гонки: между проверкой членства (before_action) и рендером
     # вьюхи игрок мог успеть выйти параллельным запросом (например, авто-
     # обновление лобби сработало в ту же секунду, что и "Покинуть комнату")
     @my_player = @game.players.find_by(user: current_user)
-    redirect_to root_path, alert: "Вы больше не в этой комнате" and return if @my_player.nil?
+    redirect_to root_path, alert: "Вы больше не в этой комнате" if @my_player.nil?
   end
 
   def play
-    # Игровой стол — следующий этап разработки. Пока просто заглушка,
-    # сюда редиректим всех игроков комнаты, когда статус становится "playing".
-    # Если статус откатился назад (например, все соперники вышли и остался
-    # один игрок — см. Game#conclude_by_forfeit!), возвращаем в лобби.
-    redirect_to game_path(@game) and return if @game.status != "playing"
+    # Игровой стол — следующий этап разработки. Пока просто заглушка.
+    # Если статус откатился назад (все соперники вышли — см. Game#conclude_by_forfeit!),
+    # возвращаем в лобби.
+    redirect_to game_path(@game) unless @game.playing?
   end
 
   def ready
-    player = @game.players.find_by(user: current_user)
-    if player.nil?
-      redirect_to root_path, alert: "Вы больше не в этой комнате" and return
-    end
-
-    player.update!(ready: !player.ready)
-    @game.start! if @game.all_ready?
-
-    redirect_to(@game.status == "playing" ? play_game_path(@game) : game_path(@game))
+    @game.toggle_ready!(current_user)
+    redirect_to(@game.playing? ? play_game_path(@game) : game_path(@game))
   end
 
   def leave

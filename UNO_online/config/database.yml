@@ -24,7 +24,7 @@ development:
   <<: *default
   database: uno_online_development
   username: postgres
-  password: 7/8*9-
+  password: postgres
   host: 127.0.0.1
   port: 5432
 
@@ -62,7 +62,7 @@ test:
   <<: *default
   database: uno_online_test
   username: postgres
-  password: 7/8*9-
+  password: postgres
   host: 127.0.0.1
   port: 5432
 
@@ -85,7 +85,7 @@ test:
 #
 # Connection URLs for non-primary databases can also be configured using
 # environment variables. The variable name is formed by concatenating the
-# connection name with `_DATABASE_URL`. For example:
+# # connection name with `_DATABASE_URL`. For example:
 #
 #   CACHE_DATABASE_URL="postgres://cacheuser:cachepass@localhost/cachedatabase"
 #

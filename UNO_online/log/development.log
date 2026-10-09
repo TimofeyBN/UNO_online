@@ -4408,3 +4408,577 @@ Using vips to process variants requires the libvips library. Please install libv
   [1m[35mSQL (0.4ms)[0m  [1m[35mSET search_path TO public /*application='UnoOnline'*/[0m
   [1m[35mSQL (0.5ms)[0m  [1m[35mSET search_path TO "$user", public /*application='UnoOnline'*/[0m
 Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+  [1m[35m (344.3ms)[0m  [1m[35mCREATE DATABASE "uno_online_development" ENCODING = 'unicode' /*application='UnoOnline'*/[0m
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+  [1m[35m (107.7ms)[0m  [1m[35mCREATE DATABASE "uno_online_development" ENCODING = 'unicode' /*application='UnoOnline'*/[0m
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+  [1m[35m (107.1ms)[0m  [1m[35mCREATE DATABASE "uno_online_development" ENCODING = 'unicode' /*application='UnoOnline'*/[0m
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+  [1m[35m (329.6ms)[0m  [1m[35mCREATE DATABASE "uno_online_development" ENCODING = 'unicode' /*application='UnoOnline'*/[0m
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+  [1m[35m (113.7ms)[0m  [1m[35mCREATE DATABASE "uno_online_development" ENCODING = 'unicode' /*application='UnoOnline'*/[0m
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+  [1m[35m (112.9ms)[0m  [1m[35mCREATE DATABASE "uno_online_development" ENCODING = 'unicode' /*application='UnoOnline'*/[0m
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+  [1m[35mSQL (0.3ms)[0m  [1m[35mSET search_path TO public /*application='UnoOnline'*/[0m
+  [1m[35m (382.7ms)[0m  [1m[35mCREATE DATABASE "uno_online_development" ENCODING = 'unicode' /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[35mSET search_path TO public /*application='UnoOnline'*/[0m
+  [1m[35m (142.5ms)[0m  [1m[35mCREATE DATABASE "uno_online_test" ENCODING = 'unicode' /*application='UnoOnline'*/[0m
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+  [1m[35mSQL (0.2ms)[0m  [1m[35mCREATE EXTENSION IF NOT EXISTS "plpgsql" SCHEMA pg_catalog /*application='UnoOnline'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "games" CASCADE /*application='UnoOnline'*/[0m
+  [1m[35m (7.9ms)[0m  [1m[35mCREATE TABLE "games" ("id" bigserial primary key, "code" character varying NOT NULL, "status" character varying DEFAULT 'waiting' NOT NULL, "current_player_id" bigint, "direction" character varying DEFAULT 'clockwise', "top_card" jsonb, "deck_state" jsonb, "winner_id" bigint, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, "visibility" character varying DEFAULT 'public' NOT NULL, "max_players" integer DEFAULT 4 NOT NULL, "host_id" bigint) /*application='UnoOnline'*/[0m
+  [1m[35m (3.1ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_games_on_code" ON "games" ("code") /*application='UnoOnline'*/[0m
+  [1m[35m (3.0ms)[0m  [1m[35mCREATE INDEX "index_games_on_current_player_id" ON "games" ("current_player_id") /*application='UnoOnline'*/[0m
+  [1m[35m (2.7ms)[0m  [1m[35mCREATE INDEX "index_games_on_host_id" ON "games" ("host_id") /*application='UnoOnline'*/[0m
+  [1m[35m (2.7ms)[0m  [1m[35mCREATE INDEX "index_games_on_visibility" ON "games" ("visibility") /*application='UnoOnline'*/[0m
+  [1m[35m (2.6ms)[0m  [1m[35mCREATE INDEX "index_games_on_winner_id" ON "games" ("winner_id") /*application='UnoOnline'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "players" CASCADE /*application='UnoOnline'*/[0m
+  [1m[35m (4.8ms)[0m  [1m[35mCREATE TABLE "players" ("id" bigserial primary key, "game_id" bigint NOT NULL, "user_id" bigint NOT NULL, "position" integer NOT NULL, "hand" jsonb DEFAULT '[]' NOT NULL, "has_called_uno" boolean DEFAULT FALSE NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, "ready" boolean DEFAULT FALSE NOT NULL) /*application='UnoOnline'*/[0m
+  [1m[35m (2.8ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_players_on_game_id_and_position" ON "players" ("game_id", "position") /*application='UnoOnline'*/[0m
+  [1m[35m (2.7ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_players_on_game_id_and_user_id" ON "players" ("game_id", "user_id") /*application='UnoOnline'*/[0m
+  [1m[35m (2.6ms)[0m  [1m[35mCREATE INDEX "index_players_on_game_id" ON "players" ("game_id") /*application='UnoOnline'*/[0m
+  [1m[35m (2.7ms)[0m  [1m[35mCREATE INDEX "index_players_on_user_id" ON "players" ("user_id") /*application='UnoOnline'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "users" CASCADE /*application='UnoOnline'*/[0m
+  [1m[35m (4.5ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "name" character varying NOT NULL, "email" character varying NOT NULL, "password_digest" character varying NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL) /*application='UnoOnline'*/[0m
+  [1m[35m (2.5ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email") /*application='UnoOnline'*/[0m
+  [1m[35m (4.0ms)[0m  [1m[35mALTER TABLE "games" ADD CONSTRAINT "fk_rails_40df6833aa"
+FOREIGN KEY ("current_player_id")
+  REFERENCES "players" ("id")
+ /*application='UnoOnline'*/[0m
+  [1m[35m (3.2ms)[0m  [1m[35mALTER TABLE "games" ADD CONSTRAINT "fk_rails_f914b0e9b7"
+FOREIGN KEY ("host_id")
+  REFERENCES "users" ("id")
+ /*application='UnoOnline'*/[0m
+  [1m[35m (2.9ms)[0m  [1m[35mALTER TABLE "games" ADD CONSTRAINT "fk_rails_408b1e6c0c"
+FOREIGN KEY ("winner_id")
+  REFERENCES "users" ("id")
+ /*application='UnoOnline'*/[0m
+  [1m[35m (3.1ms)[0m  [1m[35mALTER TABLE "players" ADD CONSTRAINT "fk_rails_d71756309d"
+FOREIGN KEY ("game_id")
+  REFERENCES "games" ("id")
+ /*application='UnoOnline'*/[0m
+  [1m[35m (3.3ms)[0m  [1m[35mALTER TABLE "players" ADD CONSTRAINT "fk_rails_224cac07ce"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+ /*application='UnoOnline'*/[0m
+  [1m[35m (5.2ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY) /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='UnoOnline'*/[0m
+  [1m[35m (3.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20260925120005) /*application='UnoOnline'*/[0m
+  [1m[35m (2.8ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20260925120004),
+(20260925120003),
+(20260925120002),
+(20260925120001),
+(20260925120000); /*application='UnoOnline'*/[0m
+  [1m[35m (4.0ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL) /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.6ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Create (3.0ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-10-08 21:20:12.811293', '2026-10-08 21:20:12.811297') RETURNING "key" /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'schema_sha1' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Create (2.4ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('schema_sha1', 'abc551f1db1d0af0bf164b9d2a556bfde9c7fca0', '2026-10-08 21:20:12.818561', '2026-10-08 21:20:12.818563') RETURNING "key" /*application='UnoOnline'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT pg_try_advisory_lock(7107778128673267920) /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.3ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='UnoOnline'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT pg_advisory_unlock(7107778128673267920) /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[35mSET search_path TO public /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[35mSET search_path TO "$user", public /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[35mSET search_path TO public /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[35mSET search_path TO "$user", public /*application='UnoOnline'*/[0m
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+Started GET "/" for 127.0.0.1 at 2026-10-09 00:20:32 +0300
+  [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='UnoOnline'*/[0m
+Processing by GamesController#index as HTML
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='index',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+Redirected to http://127.0.0.1:3000/login
+↳ app/controllers/application_controller.rb:29:in 'ApplicationController#require_login'
+Filter chain halted as :require_login rendered or redirected
+Completed 302 Found in 145ms (ActiveRecord: 11.3ms (1 query, 0 cached) | GC: 48.4ms)
+
+
+Started GET "/login" for 127.0.0.1 at 2026-10-09 00:20:32 +0300
+Processing by SessionsController#new as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='new',application='UnoOnline',controller='sessions'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  Rendering layout layouts/application.html.erb
+  Rendering sessions/new.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered sessions/new.html.erb within layouts/application (Duration: 5.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 20.1ms | GC: 2.8ms)
+Completed 200 OK in 48ms (Views: 27.8ms | ActiveRecord: 0.5ms (1 query, 0 cached) | GC: 4.3ms)
+
+
+Started GET "/register" for 127.0.0.1 at 2026-10-09 00:20:36 +0300
+Processing by RegistrationsController#new as HTML
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='new',application='UnoOnline',controller='registrations'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  Rendering layout layouts/application.html.erb
+  Rendering registrations/new.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered registrations/new.html.erb within layouts/application (Duration: 3.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.6ms | GC: 0.0ms)
+Completed 200 OK in 28ms (Views: 7.2ms | ActiveRecord: 5.0ms (1 query, 0 cached) | GC: 2.4ms)
+
+
+Started POST "/login" for 127.0.0.1 at 2026-10-09 00:21:06 +0300
+Processing by SessionsController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "email" => "[FILTERED]", "password" => "[FILTERED]", "commit" => "Войти"}
+  [1m[36mUser Load (1.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = 'battimnik2006@gmail.com' LIMIT 1 /*action='create',application='UnoOnline',controller='sessions'*/[0m
+  ↳ app/controllers/sessions_controller.rb:7:in 'SessionsController#create'
+  Rendering layout layouts/application.html.erb
+  Rendering sessions/new.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.0ms | GC: 0.0ms)
+  Rendered sessions/new.html.erb within layouts/application (Duration: 1.6ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.5ms | GC: 0.0ms)
+Completed 422 Unprocessable Content in 8ms (Views: 3.2ms | ActiveRecord: 1.1ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/register" for 127.0.0.1 at 2026-10-09 00:21:08 +0300
+Processing by RegistrationsController#new as HTML
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='new',application='UnoOnline',controller='registrations'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  Rendering layout layouts/application.html.erb
+  Rendering registrations/new.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered registrations/new.html.erb within layouts/application (Duration: 2.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.0ms | GC: 0.0ms)
+Completed 200 OK in 10ms (Views: 5.0ms | ActiveRecord: 0.7ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/register" for 127.0.0.1 at 2026-10-09 00:21:12 +0300
+Processing by RegistrationsController#new as HTML
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='new',application='UnoOnline',controller='registrations'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  Rendering layout layouts/application.html.erb
+  Rendering registrations/new.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered registrations/new.html.erb within layouts/application (Duration: 2.4ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.1ms | GC: 0.0ms)
+Completed 200 OK in 10ms (Views: 5.0ms | ActiveRecord: 0.7ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/register" for 127.0.0.1 at 2026-10-09 00:22:07 +0300
+Processing by RegistrationsController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "user" => {"name" => "Timofey1", "email" => "[FILTERED]", "password" => "[FILTERED]"}, "commit" => "Создать аккаунт"}
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN /*action='create',application='UnoOnline',controller='registrations'*/[0m
+  ↳ app/controllers/registrations_controller.rb:11:in 'RegistrationsController#create'
+  [1m[36mUser Exists? (2.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('battimnik2006@gmail.com') LIMIT 1 /*action='create',application='UnoOnline',controller='registrations'*/[0m
+  ↳ app/controllers/registrations_controller.rb:11:in 'RegistrationsController#create'
+  [1m[36mUser Create (1.0ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "password_digest", "created_at", "updated_at") VALUES ('Timofey1', 'battimnik2006@gmail.com', '$2a$12$Bo7rHY2tBeLXoGT6edCUTevXtas0qquyBRi8OCmxiDssbRiS04lGG', '2026-10-08 21:22:07.434341', '2026-10-08 21:22:07.434341') RETURNING "id" /*action='create',application='UnoOnline',controller='registrations'*/[0m
+  ↳ app/controllers/registrations_controller.rb:11:in 'RegistrationsController#create'
+  [1m[36mTRANSACTION (5.6ms)[0m  [1m[35mCOMMIT /*action='create',application='UnoOnline',controller='registrations'*/[0m
+  ↳ app/controllers/registrations_controller.rb:11:in 'RegistrationsController#create'
+Redirected to http://127.0.0.1:3000/
+↳ app/controllers/registrations_controller.rb:13:in 'RegistrationsController#create'
+Completed 302 Found in 409ms (ActiveRecord: 11.1ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-10-09 00:22:07 +0300
+Processing by GamesController#index as TURBO_STREAM
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1 /*action='index',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  Rendering layout layouts/application.html.erb
+  Rendering games/index.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.6ms | GC: 0.0ms)
+  [1m[36mGame Exists? (1.0ms)[0m  [1m[34mSELECT 1 AS one FROM "games" WHERE "games"."visibility" = 'public' LIMIT 1 /*action='index',application='UnoOnline',controller='games'*/[0m
+  ↳ app/views/games/index.html.erb:61
+  Rendered games/index.html.erb within layouts/application (Duration: 12.6ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 15.0ms | GC: 0.0ms)
+Completed 200 OK in 67ms (Views: 16.2ms | ActiveRecord: 3.7ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/games" for 127.0.0.1 at 2026-10-09 00:22:27 +0300
+Processing by GamesController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "visibility" => "public", "max_players" => "4", "commit" => "Создать комнату"}
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1 /*action='create',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+[31mUnpermitted parameters: :authenticity_token, :commit. Context: { controller: GamesController, action: create, request: #<ActionDispatch::Request:0x00007f6f9f0e5158>, params: {"authenticity_token" => "[FILTERED]", "visibility" => "public", "max_players" => "4", "commit" => "Создать комнату", "controller" => "games", "action" => "create"} }[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN /*action='create',application='UnoOnline',controller='games'*/[0m
+  ↳ app/models/game.rb:91:in 'block in Game#generate_code'
+  [1m[36mGame Exists? (2.8ms)[0m  [1m[34mSELECT 1 AS one FROM "games" WHERE "games"."code" = 'EHNDUB' LIMIT 1 /*action='create',application='UnoOnline',controller='games'*/[0m
+  ↳ app/models/game.rb:91:in 'block in Game#generate_code'
+  [1m[36mPlayer Exists? (0.9ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."position" = 0 AND "players"."game_id" IS NULL LIMIT 1 /*action='create',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:17:in 'GamesController#create'
+  [1m[36mPlayer Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."user_id" = 1 AND "players"."game_id" IS NULL LIMIT 1 /*action='create',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:17:in 'GamesController#create'
+  [1m[36mCACHE Game Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "games" WHERE "games"."code" = 'EHNDUB' LIMIT 1[0m
+  ↳ app/controllers/games_controller.rb:17:in 'GamesController#create'
+  [1m[36mGame Create (1.7ms)[0m  [1m[32mINSERT INTO "games" ("code", "status", "current_player_id", "direction", "top_card", "deck_state", "winner_id", "created_at", "updated_at", "visibility", "max_players", "host_id") VALUES ('EHNDUB', 'waiting', NULL, 'clockwise', NULL, NULL, NULL, '2026-10-08 21:22:27.468730', '2026-10-08 21:22:27.468730', 'public', 4, 1) RETURNING "id" /*action='create',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:17:in 'GamesController#create'
+  [1m[36mPlayer Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."position" = 0 AND "players"."game_id" = 1 LIMIT 1 /*action='create',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:17:in 'GamesController#create'
+  [1m[36mPlayer Exists? (0.6ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."user_id" = 1 AND "players"."game_id" = 1 LIMIT 1 /*action='create',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:17:in 'GamesController#create'
+  [1m[36mPlayer Create (1.5ms)[0m  [1m[32mINSERT INTO "players" ("game_id", "user_id", "position", "hand", "has_called_uno", "created_at", "updated_at", "ready") VALUES (1, 1, 0, '[]', FALSE, '2026-10-08 21:22:27.481631', '2026-10-08 21:22:27.481631', FALSE) RETURNING "id" /*action='create',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:17:in 'GamesController#create'
+  [1m[36mTRANSACTION (2.6ms)[0m  [1m[35mCOMMIT /*action='create',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:17:in 'GamesController#create'
+Redirected to http://127.0.0.1:3000/games/1
+↳ app/controllers/games_controller.rb:18:in 'GamesController#create'
+Completed 302 Found in 109ms (ActiveRecord: 15.9ms (9 queries, 1 cached) | GC: 0.0ms)
+
+
+Started GET "/games/1" for 127.0.0.1 at 2026-10-09 00:22:27 +0300
+Processing by GamesController#show as TURBO_STREAM
+  Parameters: {"id" => "1"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1 /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  [1m[36mGame Load (0.5ms)[0m  [1m[34mSELECT "games".* FROM "games" WHERE "games"."id" = 1 LIMIT 1 /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:88:in 'GamesController#set_game'
+  [1m[36mPlayer Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."game_id" = 1 AND "players"."user_id" = 1 LIMIT 1 /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:92:in 'GamesController#require_membership'
+  [1m[36mPlayer Load (0.6ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."game_id" = 1 AND "players"."user_id" = 1 ORDER BY "players"."position" ASC LIMIT 1 /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:47:in 'GamesController#show'
+  Rendering layout layouts/application.html.erb
+  Rendering games/show.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered shared/_status_badge.html.erb (Duration: 0.4ms | GC: 0.0ms)
+  [1m[36mPlayer Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM "players" WHERE "players"."game_id" = 1 /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/views/games/show.html.erb:17
+  [1m[36mPlayer Load (0.5ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."game_id" = 1 ORDER BY "players"."position" ASC /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/views/games/show.html.erb:31
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  ↳ app/views/games/show.html.erb:34
+  Rendered games/show.html.erb within layouts/application (Duration: 11.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 12.5ms | GC: 0.0ms)
+Completed 200 OK in 24ms (Views: 12.0ms | ActiveRecord: 3.2ms (7 queries, 1 cached) | GC: 0.0ms)
+
+
+Started GET "/games/1" for 127.0.0.1 at 2026-10-09 00:22:30 +0300
+Processing by GamesController#show as HTML
+  Parameters: {"id" => "1"}
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1 /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  [1m[36mGame Load (0.7ms)[0m  [1m[34mSELECT "games".* FROM "games" WHERE "games"."id" = 1 LIMIT 1 /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:88:in 'GamesController#set_game'
+  [1m[36mPlayer Exists? (0.6ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."game_id" = 1 AND "players"."user_id" = 1 LIMIT 1 /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:92:in 'GamesController#require_membership'
+  [1m[36mPlayer Load (0.7ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."game_id" = 1 AND "players"."user_id" = 1 ORDER BY "players"."position" ASC LIMIT 1 /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:47:in 'GamesController#show'
+  Rendering layout layouts/application.html.erb
+  Rendering games/show.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered shared/_status_badge.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  [1m[36mPlayer Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM "players" WHERE "players"."game_id" = 1 /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/views/games/show.html.erb:17
+  [1m[36mPlayer Load (0.6ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."game_id" = 1 ORDER BY "players"."position" ASC /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/views/games/show.html.erb:31
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  ↳ app/views/games/show.html.erb:34
+  Rendered games/show.html.erb within layouts/application (Duration: 11.4ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 13.3ms | GC: 0.0ms)
+Completed 200 OK in 30ms (Views: 13.0ms | ActiveRecord: 4.0ms (7 queries, 1 cached) | GC: 0.0ms)
+
+
+Started POST "/games/1/ready" for 127.0.0.1 at 2026-10-09 00:22:31 +0300
+Processing by GamesController#ready as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "id" => "1"}
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1 /*action='ready',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  [1m[36mGame Load (0.6ms)[0m  [1m[34mSELECT "games".* FROM "games" WHERE "games"."id" = 1 LIMIT 1 /*action='ready',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:88:in 'GamesController#set_game'
+  [1m[36mPlayer Exists? (0.6ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."game_id" = 1 AND "players"."user_id" = 1 LIMIT 1 /*action='ready',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:92:in 'GamesController#require_membership'
+  [1m[36mPlayer Load (0.7ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."game_id" = 1 AND "players"."user_id" = 1 ORDER BY "players"."position" ASC LIMIT 1 /*action='ready',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:60:in 'GamesController#ready'
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN /*action='ready',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:65:in 'GamesController#ready'
+  [1m[36mPlayer Update (0.7ms)[0m  [1m[33mUPDATE "players" SET "updated_at" = '2026-10-08 21:22:31.475170', "ready" = TRUE WHERE "players"."id" = 1 /*action='ready',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:65:in 'GamesController#ready'
+  [1m[36mTRANSACTION (5.6ms)[0m  [1m[35mCOMMIT /*action='ready',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:65:in 'GamesController#ready'
+  [1m[36mPlayer Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM "players" WHERE "players"."game_id" = 1 /*action='ready',application='UnoOnline',controller='games'*/[0m
+  ↳ app/models/game.rb:35:in 'Game#all_ready?'
+Redirected to http://127.0.0.1:3000/games/1
+↳ app/controllers/games_controller.rb:68:in 'GamesController#ready'
+Completed 302 Found in 41ms (ActiveRecord: 18.7ms (6 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/games/1" for 127.0.0.1 at 2026-10-09 00:22:31 +0300
+Processing by GamesController#show as TURBO_STREAM
+  Parameters: {"id" => "1"}
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1 /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  [1m[36mGame Load (0.6ms)[0m  [1m[34mSELECT "games".* FROM "games" WHERE "games"."id" = 1 LIMIT 1 /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:88:in 'GamesController#set_game'
+  [1m[36mPlayer Exists? (0.6ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."game_id" = 1 AND "players"."user_id" = 1 LIMIT 1 /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:92:in 'GamesController#require_membership'
+  [1m[36mPlayer Load (0.8ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."game_id" = 1 AND "players"."user_id" = 1 ORDER BY "players"."position" ASC LIMIT 1 /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:47:in 'GamesController#show'
+  Rendering layout layouts/application.html.erb
+  Rendering games/show.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered shared/_status_badge.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  [1m[36mPlayer Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM "players" WHERE "players"."game_id" = 1 /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/views/games/show.html.erb:17
+  [1m[36mPlayer Load (0.6ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."game_id" = 1 ORDER BY "players"."position" ASC /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/views/games/show.html.erb:31
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  ↳ app/views/games/show.html.erb:34
+  Rendered games/show.html.erb within layouts/application (Duration: 10.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 12.4ms | GC: 0.0ms)
+Completed 200 OK in 27ms (Views: 12.1ms | ActiveRecord: 3.6ms (7 queries, 1 cached) | GC: 0.0ms)
+
+
+Started DELETE "/games/1" for 127.0.0.1 at 2026-10-09 00:22:35 +0300
+Started GET "/games/1" for 127.0.0.1 at 2026-10-09 00:22:35 +0300
+Processing by GamesController#destroy as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "id" => "1"}
+Processing by GamesController#show as HTML
+  Parameters: {"id" => "1"}
+  [1m[36mUser Load (2.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1 /*action='destroy',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  [1m[36mGame Load (0.9ms)[0m  [1m[34mSELECT "games".* FROM "games" WHERE "games"."id" = 1 LIMIT 1 /*action='destroy',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:88:in 'GamesController#set_game'
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN /*action='destroy',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:78:in 'GamesController#destroy'
+  [1m[36mPlayer Load (6.1ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."game_id" = 1 ORDER BY "players"."position" ASC /*action='destroy',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:78:in 'GamesController#destroy'
+  [1m[36mPlayer Destroy (0.9ms)[0m  [1m[31mDELETE FROM "players" WHERE "players"."id" = 1 /*action='destroy',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:78:in 'GamesController#destroy'
+  [1m[36mGame Destroy (0.9ms)[0m  [1m[31mDELETE FROM "games" WHERE "games"."id" = 1 /*action='destroy',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:78:in 'GamesController#destroy'
+  [1m[36mTRANSACTION (5.3ms)[0m  [1m[35mCOMMIT /*action='destroy',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:78:in 'GamesController#destroy'
+Redirected to http://127.0.0.1:3000/
+↳ app/controllers/games_controller.rb:79:in 'GamesController#destroy'
+Completed 302 Found in 40ms (ActiveRecord: 17.1ms (5 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-10-09 00:22:35 +0300
+Processing by GamesController#index as TURBO_STREAM
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1 /*action='index',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  Rendering layout layouts/application.html.erb
+  Rendering games/index.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  [1m[36mGame Exists? (0.7ms)[0m  [1m[34mSELECT 1 AS one FROM "games" WHERE "games"."visibility" = 'public' LIMIT 1 /*action='index',application='UnoOnline',controller='games'*/[0m
+  ↳ app/views/games/index.html.erb:61
+  Rendered games/index.html.erb within layouts/application (Duration: 7.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 9.4ms | GC: 0.0ms)
+Completed 200 OK in 17ms (Views: 10.4ms | ActiveRecord: 1.3ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+  [1m[36mUser Load (67.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1 /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  [1m[36mGame Load (0.9ms)[0m  [1m[34mSELECT "games".* FROM "games" WHERE "games"."id" = 1 LIMIT 1 /*action='show',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/games_controller.rb:88:in 'GamesController#set_game'
+rescue_from handled ActiveRecord::RecordNotFound (Couldn't find Game with 'id'="1") - /home/timofey/.rbenv/versions/4.0.7/lib/ruby/gems/4.0.0/gems/activerecord-8.1.4/lib/active_record/core.rb:279:in 'ActiveRecord::Core::ClassMethods#find'
+Redirected to http://127.0.0.1:3000/
+↳ app/controllers/application_controller.rb:15:in 'ApplicationController#record_not_found'
+Completed 302 Found in 79ms (ActiveRecord: 84.4ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-10-09 00:22:35 +0300
+Processing by GamesController#index as HTML
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1 /*action='index',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  Rendering layout layouts/application.html.erb
+  Rendering games/index.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  [1m[36mGame Exists? (1.0ms)[0m  [1m[34mSELECT 1 AS one FROM "games" WHERE "games"."visibility" = 'public' LIMIT 1 /*action='index',application='UnoOnline',controller='games'*/[0m
+  ↳ app/views/games/index.html.erb:61
+  Rendered games/index.html.erb within layouts/application (Duration: 7.4ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 10.3ms | GC: 0.0ms)
+Completed 200 OK in 20ms (Views: 10.9ms | ActiveRecord: 2.1ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+  [1m[35mSQL (0.1ms)[0m  [1m[35mSET search_path TO public /*application='UnoOnline'*/[0m
+  [1m[35m (36.7ms)[0m  [1m[35mCREATE DATABASE "uno_online_development" ENCODING = 'unicode' /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mSET search_path TO public /*application='UnoOnline'*/[0m
+  [1m[35m (29.5ms)[0m  [1m[35mCREATE DATABASE "uno_online_test" ENCODING = 'unicode' /*application='UnoOnline'*/[0m
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT pg_try_advisory_lock(7107778128673267920) /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (1.0ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='UnoOnline'*/[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_advisory_unlock(7107778128673267920) /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mSET search_path TO public /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[35mSET search_path TO "$user", public /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[35mSET search_path TO public /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[35mSET search_path TO "$user", public /*application='UnoOnline'*/[0m
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+  [1m[35mSQL (0.3ms)[0m  [1m[35mSET search_path TO public /*application='UnoOnline'*/[0m
+  [1m[35m (339.0ms)[0m  [1m[35mCREATE DATABASE "uno_online_development" ENCODING = 'unicode' /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[35mSET search_path TO public /*application='UnoOnline'*/[0m
+  [1m[35m (54.9ms)[0m  [1m[35mCREATE DATABASE "uno_online_test" ENCODING = 'unicode' /*application='UnoOnline'*/[0m
+  [1m[35m (1.3ms)[0m  [1m[34mSELECT pg_try_advisory_lock(7107778128673267920) /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (2.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (2.6ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='UnoOnline'*/[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT pg_advisory_unlock(7107778128673267920) /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[35mSET search_path TO public /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[35mSET search_path TO "$user", public /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[35mSET search_path TO public /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[35mSET search_path TO "$user", public /*application='UnoOnline'*/[0m
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+Started GET "/" for 127.0.0.1 at 2026-10-09 09:37:24 +0300
+  [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='UnoOnline'*/[0m
+Processing by GamesController#index as HTML
+  [1m[36mUser Load (1.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='index',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+Redirected to http://127.0.0.1:3000/login
+↳ app/controllers/application_controller.rb:29:in 'ApplicationController#require_login'
+Filter chain halted as :require_login rendered or redirected
+Completed 302 Found in 91ms (ActiveRecord: 11.9ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/login" for 127.0.0.1 at 2026-10-09 09:37:25 +0300
+Processing by SessionsController#new as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='new',application='UnoOnline',controller='sessions'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  Rendering layout layouts/application.html.erb
+  Rendering sessions/new.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered sessions/new.html.erb within layouts/application (Duration: 6.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 18.0ms | GC: 0.0ms)
+Completed 200 OK in 49ms (Views: 27.0ms | ActiveRecord: 0.3ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/register" for 127.0.0.1 at 2026-10-09 09:37:29 +0300
+Processing by RegistrationsController#new as HTML
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='new',application='UnoOnline',controller='registrations'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  Rendering layout layouts/application.html.erb
+  Rendering registrations/new.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered registrations/new.html.erb within layouts/application (Duration: 4.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.8ms | GC: 0.0ms)
+Completed 200 OK in 24ms (Views: 7.3ms | ActiveRecord: 3.4ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/ui-kit" for 127.0.0.1 at 2026-10-09 09:37:31 +0300
+Processing by PagesController#ui_kit as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering pages/ui_kit.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.5ms | GC: 0.0ms)
+  Rendered shared/_logo.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered shared/_status_badge.html.erb (Duration: 0.5ms | GC: 0.0ms)
+  Rendered shared/_status_badge.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered shared/_status_badge.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered shared/_status_badge.html.erb (Duration: 0.0ms | GC: 0.0ms)
+  Rendered pages/ui_kit.html.erb within layouts/application (Duration: 4.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 6.3ms | GC: 0.0ms)
+Completed 200 OK in 9ms (Views: 7.6ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-10-09 09:37:44 +0300
+Processing by GamesController#index as HTML
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='index',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+Redirected to http://127.0.0.1:3000/login
+↳ app/controllers/application_controller.rb:29:in 'ApplicationController#require_login'
+Filter chain halted as :require_login rendered or redirected
+Completed 302 Found in 5ms (ActiveRecord: 0.6ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/login" for 127.0.0.1 at 2026-10-09 09:37:44 +0300
+Processing by SessionsController#new as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='new',application='UnoOnline',controller='sessions'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  Rendering layout layouts/application.html.erb
+  Rendering sessions/new.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered sessions/new.html.erb within layouts/application (Duration: 2.6ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.3ms | GC: 0.0ms)
+Completed 200 OK in 10ms (Views: 5.3ms | ActiveRecord: 0.5ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+Started GET "/ui-kit" for 127.0.0.1 at 2026-10-09 09:49:20 +0300
+  [1m[36mActiveRecord::SchemaMigration Load (0.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='UnoOnline'*/[0m
+Processing by PagesController#ui_kit as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering pages/ui_kit.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered shared/_logo.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered shared/_status_badge.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered shared/_status_badge.html.erb (Duration: 0.0ms | GC: 0.0ms)
+  Rendered shared/_status_badge.html.erb (Duration: 0.0ms | GC: 0.0ms)
+  Rendered shared/_status_badge.html.erb (Duration: 0.0ms | GC: 0.0ms)
+  Rendered pages/ui_kit.html.erb within layouts/application (Duration: 3.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 34.6ms | GC: 14.5ms)
+Completed 200 OK in 50ms (Views: 38.7ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 15.4ms)
+
+
+Started GET "/register" for 127.0.0.1 at 2026-10-09 09:49:25 +0300
+Processing by RegistrationsController#new as HTML
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='new',application='UnoOnline',controller='registrations'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  Rendering layout layouts/application.html.erb
+  Rendering registrations/new.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.0ms | GC: 0.0ms)
+  Rendered registrations/new.html.erb within layouts/application (Duration: 3.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.2ms | GC: 0.0ms)
+Completed 200 OK in 105ms (Views: 5.1ms | ActiveRecord: 14.0ms (1 query, 0 cached) | GC: 28.1ms)
+
+
+Started GET "/login" for 127.0.0.1 at 2026-10-09 09:49:27 +0300
+Processing by SessionsController#new as HTML
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='new',application='UnoOnline',controller='sessions'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  Rendering layout layouts/application.html.erb
+  Rendering sessions/new.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered sessions/new.html.erb within layouts/application (Duration: 3.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.4ms | GC: 0.0ms)
+Completed 200 OK in 10ms (Views: 5.6ms | ActiveRecord: 0.7ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/login" for 127.0.0.1 at 2026-10-09 09:49:30 +0300
+Processing by SessionsController#new as HTML
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='new',application='UnoOnline',controller='sessions'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  Rendering layout layouts/application.html.erb
+  Rendering sessions/new.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.0ms | GC: 0.0ms)
+  Rendered sessions/new.html.erb within layouts/application (Duration: 1.8ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.9ms | GC: 0.0ms)
+Completed 200 OK in 8ms (Views: 3.6ms | ActiveRecord: 0.6ms (1 query, 0 cached) | GC: 0.5ms)
+
+
+Started POST "/login" for 127.0.0.1 at 2026-10-09 09:49:34 +0300
+Processing by SessionsController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "email" => "[FILTERED]", "password" => "[FILTERED]", "commit" => "Войти"}
+  [1m[36mUser Load (1.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = 'battimnik2006@gmail.com' LIMIT 1 /*action='create',application='UnoOnline',controller='sessions'*/[0m
+  ↳ app/controllers/sessions_controller.rb:7:in 'SessionsController#create'
+Redirected to http://127.0.0.1:3000/
+↳ app/controllers/sessions_controller.rb:11:in 'SessionsController#create'
+Completed 302 Found in 388ms (ActiveRecord: 1.8ms (1 query, 0 cached) | GC: 0.3ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-10-09 09:49:35 +0300
+Processing by GamesController#index as TURBO_STREAM
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1 /*action='index',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  Rendering layout layouts/application.html.erb
+  Rendering games/index.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  [1m[36mGame Exists? (6.1ms)[0m  [1m[34mSELECT 1 AS one FROM "games" WHERE "games"."visibility" = 'public' LIMIT 1 /*action='index',application='UnoOnline',controller='games'*/[0m
+  ↳ app/views/games/index.html.erb:61
+  Rendered games/index.html.erb within layouts/application (Duration: 13.1ms | GC: 0.2ms)
+  Rendered layout layouts/application.html.erb (Duration: 14.7ms | GC: 0.2ms)
+Completed 200 OK in 28ms (Views: 9.9ms | ActiveRecord: 9.0ms (2 queries, 0 cached) | GC: 1.6ms)
+
+
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+Started GET "/" for 127.0.0.1 at 2026-10-09 12:15:34 +0300
+  [1m[36mActiveRecord::SchemaMigration Load (2.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='UnoOnline'*/[0m
+Processing by GamesController#index as HTML
+  [1m[36mUser Load (1.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1 /*action='index',application='UnoOnline',controller='games'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  Rendering layout layouts/application.html.erb
+  Rendering games/index.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  [1m[36mGame Exists? (3.8ms)[0m  [1m[34mSELECT 1 AS one FROM "games" WHERE "games"."visibility" = 'public' LIMIT 1 /*action='index',application='UnoOnline',controller='games'*/[0m
+  ↳ app/views/games/index.html.erb:61
+  Rendered games/index.html.erb within layouts/application (Duration: 18.5ms | GC: 7.5ms)
+  Rendered layout layouts/application.html.erb (Duration: 41.3ms | GC: 16.6ms)
+Completed 200 OK in 194ms (Views: 47.1ms | ActiveRecord: 29.9ms (2 queries, 0 cached) | GC: 58.6ms)
+
+
