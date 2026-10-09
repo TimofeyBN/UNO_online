@@ -41,22 +41,45 @@
 
 ```bash
 git clone https://github.com/TimofeyBN/UNO_online.git
-cd UNO_online
+cd UNO_online/UNO_online
+
+# Ruby нужной версии (см. .ruby-version)
+rbenv install 4.0.7
+rbenv local 4.0.7
 
 # зависимости
 bundle install
 
-set DISABLE_BOOTSNAP=1
+# параметры подключения к PostgreSQL — по умолчанию postgres / postgres на 127.0.0.1:5432;
+# переопределяются переменными DATABASE_USER, DATABASE_PASSWORD, DATABASE_HOST, DATABASE_PORT
+export DATABASE_PASSWORD=ваш_пароль_postgres   # если он отличается от postgres
 
 # база данных
-bundle exec rails db:create
-bundle exec rails db:migrate
+bin/rails db:create db:migrate
 
 # запуск
-bundle exec rails server
+bin/rails server
 ```
 
 Приложение будет доступно на `http://127.0.0.1:3000/`.
+
+## Тесты
+
+Используется встроенный в Rails Minitest, тестовая БД — отдельная (`uno_online_test`).
+
+```bash
+bin/rails test                  # все тесты
+bin/rails test test/models      # только модели
+bin/rails test test/integration # только сценарии «запрос → ответ»
+bin/rails test test/models/game_test.rb:42   # один тест по номеру строки
+bundle exec rubocop -a 
+```
+
+| Папка | Что проверяется |
+|---|---|
+| `test/models/` | валидации и логика `User`, `Game`, `Player`: код комнаты, лимиты игроков, передача прав хоста, готовность, победа при выходе соперников, защита внешних ключей |
+| `test/integration/` | регистрация, вход/выход и `session`, создание комнат (публичные/приватные), вход по коду, «Готов», выход, удаление комнаты и защита от доступа без входа |
+
 
 ## Структура проекта
 
