@@ -104,6 +104,7 @@ bin/rails test test/models      # только модели и правила и
 bin/rails test test/integration # только сценарии «запрос → ответ»
 bin/rails test test/models/game_test.rb:42   # один тест по номеру строки
 
+bundle exec rails db:test:prepare
 bundle exec rails test 
 ```
 
