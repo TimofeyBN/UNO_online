@@ -19,25 +19,33 @@
 - Статусы комнаты: ожидание / идёт игра / завершена — видны и на главной, и в лобби
 - Система готовности — у каждого игрока свой флаг «Готов», партия стартует автоматически, когда готовы все (от 2 игроков)
 - Создатель комнаты может её удалить; если выходит сам — право хоста переходит следующему игроку; если уходят все — комната удаляется
-- Если во время игры остался один игрок — он побеждает техническим поражением соперников, комната возвращается в лобби
+- **Игровой стол** — полноценная партия в Uno: стопка карт, сброс, рука игрока, индикатор хода и направления
+- **Полная колода Uno (108 карт)**: числа 0–9, skip, reverse, +2, wild, wild +4; раздача по 7 карт, перетасовка сброса, когда колода кончилась
+- **Правила**: ход по цвету или значению, выбор цвета для «чёрных» карт, reverse вдвоём работает как skip, победа при пустой руке
+- **Штраф по цепочке:** на +2 или +4 соперник может ответить любой штрафной картой (+2 или +4, цвет не важен). Штраф суммируется и переходит следующему игроку; кто ответить не может, берёт весь накопленный штраф и пропускает ход
+- **Несколько одинаковых карт за ход:** если в руке есть карты с одинаковыми цветом и значением, их можно сыграть все вместе (ссылка «все ×k» под картой). Два skip пропускают двух соперников, два +2 дают штраф +4, два reverse направление не меняют
+- **Правило «UNO!»** — кнопка доступна, когда осталось две карты или меньше; не нажал перед предпоследней картой — штраф +2 карты
+- **Живое обновление через ActionCable** (Turbo Streams): после каждого хода стол перерисовывается у всех игроков; свои карты видны только владельцу, у соперников показано только их число
+- Если игрок вышел во время партии — его карты уходят в сброс, а ход (если он был у ушедшего) получает следующий; если остался один игрок — он побеждает, комната возвращается в лобби
+- После победы все нажимают «Готов» и играют новую партию в той же комнате
 - Витрина UI-kit (`/ui-kit`) — переиспользуемые компоненты интерфейса
-- Полный набор карт Uno: числа, skip, reverse, +2, wild, +4 *(пока только в схеме данных, игровая логика не реализована)*
-- Правило «UNO!» — штраф +2 карты, если игрок не нажал кнопку при последней карте *(пока только в схеме данных)*
-- Живое обновление данных — пока реализовано через периодический опрос (перезагрузка лобби раз в 3 сек), заменится на ActionCable на следующем этапе
+- Лобби обновляется пока через периодический опрос (перезагрузка раз в 3 сек) — позже заменится на ActionCable
+
+**Пока не сделано:** анимации карт (CSS/GSAP), журнал ходов («Борис взял карту»), таймер хода.
 
 ## Схема данных
 
 **users** — id, name, email, password_digest, created_at, updated_at
 
-**games** — id, code (уникальный код комнаты), status (waiting/playing/finished), visibility (public/private), max_players (2–6), host_id → users.id (создатель комнаты), current_player_id → players.id, direction (clockwise/counterclockwise), top_card (jsonb), deck_state (jsonb), winner_id → users.id (nullable), created_at, updated_at
+**games** — id, code (уникальный код комнаты), status (waiting/playing/finished), visibility (public/private), max_players (2–6), host_id → users.id (создатель комнаты), current_player_id → players.id (чей сейчас ход), direction (clockwise/counterclockwise), top_card (jsonb — карта на столе; у «чёрной» карты в `color` лежит выбранный цвет), deck_state (jsonb — колода, массив карт), discard_pile (jsonb — сброс), pending_draw (накопленный штраф от +2/+4), winner_id → users.id (nullable), created_at, updated_at
 
-**players** — id, game_id → games.id, user_id → users.id, position, hand (jsonb, массив карт), ready (готовность в лобби), has_called_uno, created_at, updated_at
+**players** — id, game_id → games.id, user_id → users.id, position (место за столом), hand (jsonb, массив карт), ready (готовность в лобби), has_called_uno, created_at, updated_at
 
 Формат карты: `{ "color": "red|yellow|green|blue|null", "value": "0-9|skip|reverse|draw2|wild|wild_draw4" }`
 
 Ограничения уникальности: `(game_id, user_id)`, `(game_id, position)`, `code` у games.
 
-## Установка и запуск
+## Установка и запуск (Linux, rbenv)
 
 ```bash
 git clone https://github.com/TimofeyBN/UNO_online.git
@@ -61,6 +69,29 @@ bin/rails db:create db:migrate
 bin/rails server
 ```
 
+## Установка и запуск (Windows)
+
+```bash
+git clone https://github.com/TimofeyBN/UNO_online.git
+cd UNO_online/UNO_online
+
+# зависимости
+bundle install
+
+# параметры подключения к PostgreSQL — по умолчанию postgres / postgres на 127.0.0.1:5432;
+# переопределяются переменными DATABASE_USER, DATABASE_PASSWORD, DATABASE_HOST, DATABASE_PORT
+export DATABASE_PASSWORD=ваш_пароль_postgres   # если он отличается от postgres
+
+set DISABLE_BOOTSNAP=1
+
+# база данных
+bundle exec rails db:create 
+bundle exec rails db:migrate
+
+# запуск
+bundle exec rails server
+```
+
 Приложение будет доступно на `http://127.0.0.1:3000/`.
 
 ## Тесты
@@ -69,40 +100,61 @@ bin/rails server
 
 ```bash
 bin/rails test                  # все тесты
-bin/rails test test/models      # только модели
+bin/rails test test/models      # только модели и правила игры
 bin/rails test test/integration # только сценарии «запрос → ответ»
 bin/rails test test/models/game_test.rb:42   # один тест по номеру строки
-bundle exec rubocop -a 
+
+bundle exec rails test 
 ```
 
 | Папка | Что проверяется |
 |---|---|
-| `test/models/` | валидации и логика `User`, `Game`, `Player`: код комнаты, лимиты игроков, передача прав хоста, готовность, победа при выходе соперников, защита внешних ключей |
-| `test/integration/` | регистрация, вход/выход и `session`, создание комнат (публичные/приватные), вход по коду, «Готов», выход, удаление комнаты и защита от доступа без входа |
+| `test/models/uno/` | правила Uno в чистом виде: колода из 108 карт, раздача, ходы, skip / reverse / +2 / wild / +4, штраф за «UNO!», цепочка штрафов +2/+4, несколько одинаковых карт за ход, перетасовка сброса, победа |
+| `test/models/` | валидации и логика `User`, `Game`, `Player`: код комнаты, лимиты игроков, передача прав хоста, готовность, старт партии, ходы и победа, выход игрока посреди игры |
+| `test/integration/` | регистрация, вход/выход и `session`, создание комнат, вход по коду, «Готов», игровой стол (ход, взять карту, «UNO!»), выход, удаление комнаты, защита от доступа без входа |
 
+## CI/CD (GitHub Actions)
+
+Workflow: `.github/workflows/ci.yml` — запускается на каждый push в `main` и на каждый pull request.
+
+1. **scan_ruby** — Brakeman (уязвимости в коде) и bundler-audit (уязвимые гемы)
+2. **lint** — RuboCop (стиль кода)
+3. **test** — автотесты на PostgreSQL 17 (поднимается как сервис GitHub Actions)
+4. **publish_image** — только на `main` и только если все проверки зелёные: собирает Docker-образ и публикует в GitHub Container Registry (`ghcr.io`)
+
+Локально те же проверки: `bin/rubocop`, `bin/brakeman`, `bin/rails test`.
 
 ## Структура проекта
 
 ```
 app/
-  channels/       # ActionCable-каналы (синхронизация игры) — на следующем этапе
-  controllers/     # games, sessions, registrations, pages (UI-kit)
-  models/         # User, Game, Player
-  javascript/     # Stimulus-контроллеры (включая lobby_poll — временный опрос)
-  views/
+  channels/       # ActionCable (используется через Turbo Streams)
+  controllers/    # games, sessions, registrations, pages (UI-kit)
+  helpers/        # cards_helper — значки и названия цветов для карт
+  models/
+    user.rb, game.rb, player.rb   # данные и правила комнаты
+    uno/                          # правила Uno без привязки к БД
+      card.rb     # что такое карта, можно ли ею ходить
+      deck.rb     # колода из 108 карт
+      engine.rb   # ход, взять карту, UNO!, победа
+  javascript/     # Stimulus-контроллеры (lobby_poll — временный опрос лобби)
+  views/games/    # lobby (show), стол (play, _table), карта (_card)
 config/
 db/
   migrate/
+test/             # models/, models/uno/, integration/
 ```
+
+**Как устроена партия.** `Uno::Engine` ничего не знает про базу: получает состояние (руки, колоду, стол), применяет ход и возвращает новое состояние. `Game` достаёт состояние из БД, отдаёт движку, сохраняет результат и рассылает каждому игроку его вариант стола через ActionCable.
 
 ## Этапы разработки
 
-1. Модели, миграции, авторизация
-2. Лобби и создание/вход в комнату
-3. Базовая логика игры без анимаций
-4. ActionCable — синхронизация ходов между игроками
-5. Анимации и полировка UI
-6. Спецкарты и edge-кейсы
+1. ✅ Модели, миграции, авторизация
+2. ✅ Лобби и создание/вход в комнату
+3. ✅ Базовая логика игры: колода, ходы, правила, UNO!, победа
+4. ✅ ActionCable — синхронизация ходов между игроками (игровой стол)
+5. Анимации карт (CSS / GSAP) и полировка интерфейса
+6. Журнал ходов, таймер хода, ActionCable в лобби
 
 ## Авторы
 

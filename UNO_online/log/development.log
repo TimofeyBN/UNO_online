@@ -40167,3 +40167,78 @@ Completed 200 OK in 132ms (Views: 33.3ms | ActiveRecord: 0.0ms (0 queries, 0 cac
 
 
 Finished "/cable" [WebSocket] for 127.0.0.1 at 2026-10-16 12:19:57 +0300
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT pg_try_advisory_lock(7107778128673267920) /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (5.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (3.3ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='UnoOnline'*/[0m
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT pg_advisory_unlock(7107778128673267920) /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[35mSET search_path TO public /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[35mSET search_path TO "$user", public /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[35mSET search_path TO public /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[35mSET search_path TO "$user", public /*application='UnoOnline'*/[0m
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+  [1m[35mSQL (0.3ms)[0m  [1m[35mSET search_path TO public /*application='UnoOnline'*/[0m
+  [1m[35m (175.0ms)[0m  [1m[35mCREATE DATABASE "uno_online_development" ENCODING = 'unicode' /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[35mSET search_path TO public /*application='UnoOnline'*/[0m
+  [1m[35m (151.0ms)[0m  [1m[35mCREATE DATABASE "uno_online_test" ENCODING = 'unicode' /*application='UnoOnline'*/[0m
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT pg_try_advisory_lock(7107778128673267920) /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (5.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (4.6ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='UnoOnline'*/[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT pg_advisory_unlock(7107778128673267920) /*application='UnoOnline'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[35mSET search_path TO public /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.6ms)[0m  [1m[35mSET search_path TO "$user", public /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.6ms)[0m  [1m[35mSET search_path TO public /*application='UnoOnline'*/[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[35mSET search_path TO "$user", public /*application='UnoOnline'*/[0m
+Using vips to process variants requires the libvips library. Please install libvips using the instructions on the libvips website.
+Started GET "/register" for 127.0.0.1 at 2026-10-16 12:29:19 +0300
+  [1m[36mActiveRecord::SchemaMigration Load (7.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='UnoOnline'*/[0m
+Processing by RegistrationsController#new as HTML
+  [1m[36mUser Load (7.9ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='new',application='UnoOnline',controller='registrations'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  Rendering layout layouts/application.html.erb
+  Rendering registrations/new.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 1.1ms | GC: 0.0ms)
+  Rendered registrations/new.html.erb within layouts/application (Duration: 25.4ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 86.0ms | GC: 15.6ms)
+Completed 200 OK in 814ms (Views: 124.8ms | ActiveRecord: 72.3ms (1 query, 0 cached) | GC: 46.9ms)
+
+
+Started GET "/login" for 127.0.0.1 at 2026-10-16 12:29:34 +0300
+Processing by SessionsController#new as HTML
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='new',application='UnoOnline',controller='sessions'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  Rendering layout layouts/application.html.erb
+  Rendering sessions/new.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered sessions/new.html.erb within layouts/application (Duration: 3.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.6ms | GC: 0.0ms)
+Completed 200 OK in 71ms (Views: 20.9ms | ActiveRecord: 0.8ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/register" for 127.0.0.1 at 2026-10-16 12:29:36 +0300
+Processing by RegistrationsController#new as HTML
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='new',application='UnoOnline',controller='registrations'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  Rendering layout layouts/application.html.erb
+  Rendering registrations/new.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered registrations/new.html.erb within layouts/application (Duration: 2.6ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.9ms | GC: 0.0ms)
+Completed 200 OK in 50ms (Views: 6.4ms | ActiveRecord: 0.7ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/login" for 127.0.0.1 at 2026-10-16 12:29:37 +0300
+Processing by SessionsController#new as HTML
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='new',application='UnoOnline',controller='sessions'*/[0m
+  ↳ app/controllers/application_controller.rb:19:in 'ApplicationController#current_user'
+  Rendering layout layouts/application.html.erb
+  Rendering sessions/new.html.erb within layouts/application
+  Rendered shared/_logo.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered sessions/new.html.erb within layouts/application (Duration: 2.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.2ms | GC: 0.0ms)
+Completed 200 OK in 47ms (Views: 5.7ms | ActiveRecord: 0.8ms (1 query, 0 cached) | GC: 0.0ms)
+
+
