@@ -113,17 +113,6 @@ bundle exec rails test
 | `test/models/` | валидации и логика `User`, `Game`, `Player`: код комнаты, лимиты игроков, передача прав хоста, готовность, старт партии, ходы и победа, выход игрока посреди игры |
 | `test/integration/` | регистрация, вход/выход и `session`, создание комнат, вход по коду, «Готов», игровой стол (ход, взять карту, «UNO!»), выход, удаление комнаты, защита от доступа без входа |
 
-## CI/CD (GitHub Actions)
-
-Workflow: `.github/workflows/ci.yml` — запускается на каждый push в `main` и на каждый pull request.
-
-1. **scan_ruby** — Brakeman (уязвимости в коде) и bundler-audit (уязвимые гемы)
-2. **lint** — RuboCop (стиль кода)
-3. **test** — автотесты на PostgreSQL 17 (поднимается как сервис GitHub Actions)
-4. **publish_image** — только на `main` и только если все проверки зелёные: собирает Docker-образ и публикует в GitHub Container Registry (`ghcr.io`)
-
-Локально те же проверки: `bin/rubocop`, `bin/brakeman`, `bin/rails test`.
-
 ## Структура проекта
 
 ```
