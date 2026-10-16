@@ -70,6 +70,9 @@ Rails.application.configure do
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
 
+  # По умолчанию в development WebSocket разрешён только с localhost, а сайт открывают и по 127.0.0.1
+  config.action_cable.allowed_request_origins = [ %r{http://localhost:\d+}, %r{http://127\.0\.0\.1:\d+} ]
+
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
 

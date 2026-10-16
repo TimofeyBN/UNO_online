@@ -1,6 +1,6 @@
 <% content_for :title, "Комната #{@game.code} — Uno Online" %>
 
-<div class="main-page" <%= "data-controller=\"lobby-poll\"".html_safe if @game.status == "waiting" %>>
+<div class="main-page" <%= "data-controller=\"lobby-poll\"".html_safe if !@game.playing? %>>
   <header class="main-header">
     <%= render "shared/logo" %>
     <%= link_to "← К списку комнат", root_path, class: "main-header__logout" %>
@@ -15,7 +15,7 @@
           · <%= @game.visibility == "private" ? "Приватная" : "Публичная" %>
           · <%= @game.players.size %>/<%= @game.max_players %> игроков
         </p>
-        <% if @game.status == "waiting" && @game.winner.present? %>
+        <% if !@game.playing? && @game.winner.present? %>
           <p class="lobby-hint">🏆 Победитель прошлого раунда: <%= @game.winner.name %></p>
         <% end %>
       </div>
@@ -42,7 +42,7 @@
       <% end %>
     </ul>
 
-    <% if @game.status == "waiting" %>
+    <% if !@game.playing? %>
       <div class="lobby-actions">
         <%= button_to(@my_player.ready? ? "Отменить готовность" : "Готов",
                        ready_game_path(@game), method: :post,

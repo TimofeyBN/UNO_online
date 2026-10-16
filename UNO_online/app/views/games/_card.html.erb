@@ -1,0 +1,4 @@
+<%# Одна карта. У «чёрной» карты цвет пустой — рисуем её тёмной, пока цвет не выбран. %>
+<% if card %>
+  <span class="uno-card uno-card--<%= card["color"] || "wild" %>"><%= card_symbol(card) %></span>
+<% end %>

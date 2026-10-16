@@ -18,6 +18,9 @@ Rails.application.routes.draw do
       post :ready
       post :leave
       get :play
+      post :play_card
+      post :draw_card
+      post :call_uno
     end
     collection do
       post :join

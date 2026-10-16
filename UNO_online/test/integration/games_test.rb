@@ -7,7 +7,7 @@ class GamesTest < ActionDispatch::IntegrationTest
     sign_in @anna # дальше все запросы выполняются от имени anna
   end
 
-  #             Создание комнаты
+  # ---------- Создание комнаты ----------
 
   test "создание комнаты: создатель становится хостом и первым игроком" do
     post games_path, params: { visibility: "public", max_players: 3 }
@@ -37,7 +37,7 @@ class GamesTest < ActionDispatch::IntegrationTest
     assert_not_includes response.body, private_game.code
   end
 
-  #             Вход по коду
+  # ---------- Вход по коду ----------
 
   test "вход по коду добавляет игрока в комнату" do
     game = create_game(@boris, visibility: "private")
@@ -79,7 +79,7 @@ class GamesTest < ActionDispatch::IntegrationTest
     assert_not_includes game.users, @anna
   end
 
-  #             Лобби
+  # ---------- Лобби ----------
 
   test "участник комнаты видит лобби" do
     game = create_game(@boris)
@@ -109,7 +109,7 @@ class GamesTest < ActionDispatch::IntegrationTest
     assert game.reload.playing?
   end
 
-  #             Выход и удаление
+  # ---------- Выход и удаление ----------
 
   test "игрок может выйти из комнаты" do
     game = create_game(@boris)
@@ -149,5 +149,125 @@ class GamesTest < ActionDispatch::IntegrationTest
     get game_path(game.id)
 
     assert_redirected_to root_path
+  end
+
+  # ---------- Игровой стол ----------
+
+  # Партия двух игроков: anna (вошла в аккаунт) ходит первой.
+  # Руки и верхнюю карту подменяем, чтобы результат хода был предсказуем.
+  def start_game(anna_hand:, boris_hand:, top: Uno::Card.build("red", "5"))
+    game = create_game(@anna)
+    game.add_player!(@boris)
+    game.toggle_ready!(@anna)
+    game.toggle_ready!(@boris)
+    game.players.find_by(user: @anna).update!(hand: anna_hand)
+    game.players.find_by(user: @boris).update!(hand: boris_hand)
+    game.update!(top_card: top)
+    game
+  end
+
+  def red(value)
+    Uno::Card.build("red", value)
+  end
+
+  test "страница игры показывает стол, и первый игрок видит «Ваш ход»" do
+    game = start_game(anna_hand: [ red("9") ], boris_hand: [ red("2") ])
+
+    get play_game_path(game)
+
+    assert_response :success
+    assert_includes response.body, "Ваш ход"
+  end
+
+  test "страница игры в статусе ожидания возвращает в лобби" do
+    game = create_game(@anna)
+
+    get play_game_path(game)
+
+    assert_redirected_to game_path(game)
+  end
+
+  test "ход картой через запрос: карта ложится на стол" do
+    game = start_game(anna_hand: [ red("9"), red("1"), red("3") ], boris_hand: [ red("2") ])
+
+    post play_card_game_path(game, card: 0)
+
+    assert_response :no_content
+    assert_equal red("9"), game.reload.top_card
+  end
+
+  test "ход не в свою очередь отклоняется" do
+    game = start_game(anna_hand: [ red("9"), red("1") ], boris_hand: [ red("2"), red("3") ])
+    delete logout_path
+    sign_in @boris
+
+    post play_card_game_path(game, card: 0)
+
+    assert_response :unprocessable_entity
+    assert_equal red("5"), game.reload.top_card
+  end
+
+  test "нельзя сыграть карту, которая не подходит" do
+    game = start_game(anna_hand: [ Uno::Card.build("blue", "9"), red("1") ], boris_hand: [ red("2") ])
+
+    post play_card_game_path(game, card: 0)
+
+    assert_response :unprocessable_entity
+  end
+
+  test "взять карту через запрос" do
+    game = start_game(anna_hand: [ red("9"), red("1") ], boris_hand: [ red("2") ])
+
+    post draw_card_game_path(game)
+
+    assert_response :no_content
+    assert_equal 3, game.players.find_by(user: @anna).hand.size
+  end
+
+  test "кнопка UNO! запоминает, что игрок сказал «UNO!»" do
+    game = start_game(anna_hand: [ red("9"), red("1") ], boris_hand: [ red("2") ])
+
+    post call_uno_game_path(game)
+
+    assert_response :no_content
+    assert game.players.find_by(user: @anna).has_called_uno?
+  end
+
+  test "после победы страница игры показывает победителя" do
+    game = start_game(anna_hand: [ red("9") ], boris_hand: [ red("2"), red("3") ])
+    post play_card_game_path(game, card: 0)
+
+    get play_game_path(game)
+
+    assert_response :success
+    assert_includes response.body, "Победил anna"
+  end
+
+  test "не участник не может ходить" do
+    game = create_game(@boris)
+
+    post draw_card_game_path(game)
+
+    assert_redirected_to root_path
+  end
+
+  test "одинаковые карты можно сыграть вместе одним запросом" do
+    game = start_game(anna_hand: [ red("9"), red("9"), red("1"), red("3") ], boris_hand: [ red("2") ])
+
+    post play_card_game_path(game, card: 0, count: 2)
+
+    assert_response :no_content
+    assert_equal 2, game.players.find_by(user: @anna).hand.size
+  end
+
+  test "после +2 соперник видит плашку со штрафом" do
+    game = start_game(anna_hand: [ Uno::Card.build("red", "draw2"), red("1"), red("3") ], boris_hand: [ red("2") ])
+    post play_card_game_path(game, card: 0)
+    delete logout_path
+    sign_in @boris
+
+    get play_game_path(game)
+
+    assert_includes response.body, "Штраф +2"
   end
 end

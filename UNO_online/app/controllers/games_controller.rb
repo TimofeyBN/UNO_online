@@ -1,7 +1,7 @@
 class GamesController < ApplicationController
   before_action :require_login
-  before_action :set_game, only: %i[show destroy ready leave play]
-  before_action :require_membership, only: %i[show ready leave play]
+  before_action :set_game, only: %i[show destroy ready leave play play_card draw_card call_uno]
+  before_action :require_membership, only: %i[show ready leave play play_card draw_card call_uno]
 
   rescue_from Game::NotAPlayer do
     redirect_to root_path, alert: "Вы больше не в этой комнате"
@@ -48,11 +48,37 @@ class GamesController < ApplicationController
     redirect_to root_path, alert: "Вы больше не в этой комнате" if @my_player.nil?
   end
 
+  # Игровой стол. Дальше стол обновляется сам: каждый ход рассылается через ActionCable
+  # (см. Game#broadcast_table и вьюху games/_table). Если партия закончилась, стол
+  # показывает результат, а если комната откатилась в лобби — возвращаем в лобби.
   def play
-    # Игровой стол — следующий этап разработки. Пока просто заглушка.
-    # Если статус откатился назад (все соперники вышли — см. Game#conclude_by_forfeit!),
-    # возвращаем в лобби.
-    redirect_to game_path(@game) unless @game.playing?
+    redirect_to game_path(@game) if @game.waiting?
+  end
+
+  # Ходы. В ответ ничего не отдаём (204): стол у всех игроков, включая самого
+  # походившего, перерисуется через ActionCable.
+  def play_card
+    @game.play_card!(
+      current_user, Integer(params[:card], exception: false),
+      color: params[:color].presence, count: Integer(params[:count], exception: false) || 1
+    )
+    head :no_content
+  rescue Uno::IllegalMove, Game::Error
+    head :unprocessable_entity
+  end
+
+  def draw_card
+    @game.draw_card!(current_user)
+    head :no_content
+  rescue Uno::IllegalMove, Game::Error
+    head :unprocessable_entity
+  end
+
+  def call_uno
+    @game.call_uno!(current_user)
+    head :no_content
+  rescue Uno::IllegalMove, Game::Error
+    head :unprocessable_entity
   end
 
   def ready
@@ -67,6 +93,7 @@ class GamesController < ApplicationController
 
   def destroy
     if @game.host_id == current_user.id
+      @game.broadcast_deleted
       @game.destroy!
       redirect_to root_path, notice: "Комната удалена"
     else

@@ -1,0 +1,108 @@
+<%# Игровой стол глазами одного игрока (viewer): свои карты видны, у соперников — только их число.
+    Этот блок целиком заменяется при каждом ходе (ActionCable → Turbo Streams, цель #game_table). %>
+<% me = game.players.find { |player| player.user_id == viewer.id } %>
+
+<% if game.playing? && me %>
+  <% my_turn = game.current_player_id == me.id %>
+  <div id="game_table" class="game-table">
+    <p class="turn-banner <%= "is-my-turn" if my_turn %>">
+      <%= my_turn ? "Ваш ход!" : "Ходит #{game.current_player&.user&.name}" %>
+      <span class="turn-banner__direction" title="Направление хода"><%= game.direction == "clockwise" ? "↻" : "↺" %></span>
+    </p>
+
+    <% if game.pending_draw.positive? %>
+      <p class="penalty-banner">
+        Штраф +<%= game.pending_draw %>:
+        <%= my_turn ? "ответьте картой +2 или +4, иначе возьмёте #{game.pending_draw} карт" : "его возьмёт или перебьёт #{game.current_player&.user&.name}" %>
+      </p>
+    <% end %>
+
+    <ul class="opponents">
+      <% game.players.each do |player| %>
+        <% next if player.id == me.id %>
+        <li class="opponent <%= "is-current" if player.id == game.current_player_id %>">
+          <span class="opponent__name"><%= player.user.name %></span>
+          <span class="opponent__count"><%= player.hand.size %> карт</span>
+          <% if player.has_called_uno %><span class="uno-badge">UNO!</span><% end %>
+        </li>
+      <% end %>
+    </ul>
+
+    <div class="table-center">
+      <div class="draw-pile">
+        <span class="uno-card uno-card--back">UNO</span>
+        <small>в колоде: <%= (game.deck_state || []).size %></small>
+      </div>
+      <div class="top-card">
+        <%= render "games/card", card: game.top_card %>
+        <small>на столе</small>
+      </div>
+    </div>
+
+    <div class="table-actions">
+      <% if my_turn %>
+        <%= link_to (game.pending_draw.positive? ? "Взять #{game.pending_draw} карт" : "Взять карту"), draw_card_game_path(game),
+                    class: "btn btn--secondary", data: { turbo_method: :post } %>
+      <% end %>
+      <% if me.hand.size <= 2 && !me.has_called_uno %>
+        <%= link_to "UNO!", call_uno_game_path(game), class: "btn btn--primary", data: { turbo_method: :post } %>
+      <% end %>
+    </div>
+
+    <div class="hand">
+      <% me.hand.each_with_index do |card, index| %>
+        <% playable = my_turn && Uno::Card.playable?(card, game.top_card, pending_draw: game.pending_draw) %>
+        <% twins = me.hand.count(card) %>                 <%# сколько у игрока таких же карт (цвет и значение) %>
+        <% first_of_kind = me.hand.index(card) == index %> <%# «все ×k» показываем один раз на группу %>
+
+        <% if playable && Uno::Card.wild?(card) %>
+          <%# «Чёрную» карту нужно сыграть с выбором цвета %>
+          <div class="hand-card is-playable">
+            <%= render "games/card", card: card %>
+            <div class="color-picker">
+              <% Uno::Card::COLORS.each do |color| %>
+                <%= link_to "", play_card_game_path(game, card: index, color: color),
+                            class: "color-dot color-dot--#{color}", title: color_name(color),
+                            data: { turbo_method: :post } %>
+              <% end %>
+            </div>
+            <% if twins >= 2 && first_of_kind %>
+              <div class="color-picker" title="Сыграть все одинаковые карты сразу">
+                <span class="all-label">все ×<%= twins %></span>
+                <% Uno::Card::COLORS.each do |color| %>
+                  <%= link_to "", play_card_game_path(game, card: index, color: color, count: twins),
+                              class: "color-dot color-dot--#{color}", title: "#{color_name(color)}, все ×#{twins}",
+                              data: { turbo_method: :post } %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% elsif playable %>
+          <div class="hand-card is-playable">
+            <%= link_to play_card_game_path(game, card: index), data: { turbo_method: :post } do %>
+              <%= render "games/card", card: card %>
+            <% end %>
+            <% if twins >= 2 && first_of_kind %>
+              <%= link_to "все ×#{twins}", play_card_game_path(game, card: index, count: twins),
+                          class: "all-link", title: "Сыграть все одинаковые карты сразу", data: { turbo_method: :post } %>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="hand-card"><%= render "games/card", card: card %></div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+<% else %>
+  <div id="game_table" class="table-result">
+    <% if game.finished? %>
+      <h2>🏆 Победил <%= game.winner&.name %></h2>
+      <p class="room-card__meta">Карт на руках: <%= game.players.map { |player| "#{player.user.name} — #{player.hand.size}" }.join(", ") %></p>
+    <% elsif game.winner %>
+      <h2>🏆 Все соперники вышли — победил <%= game.winner.name %></h2>
+    <% else %>
+      <h2>Игра окончена</h2>
+    <% end %>
+    <%= link_to "В лобби", game_path(game), class: "btn btn--primary" %>
+  </div>
+<% end %>

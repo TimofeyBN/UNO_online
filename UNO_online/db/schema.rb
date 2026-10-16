@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_25_120005) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_16_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -27,6 +27,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_25_120005) do
     t.string "visibility", default: "public", null: false
     t.integer "max_players", default: 4, null: false
     t.bigint "host_id"
+    t.jsonb "discard_pile", default: [], null: false
+    t.integer "pending_draw", default: 0, null: false
     t.index ["code"], name: "index_games_on_code", unique: true
     t.index ["current_player_id"], name: "index_games_on_current_player_id"
     t.index ["host_id"], name: "index_games_on_host_id"

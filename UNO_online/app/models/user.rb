@@ -3,6 +3,7 @@ class User < ApplicationRecord
 
   has_many :players, dependent: :destroy
   has_many :games, through: :players
+  # Комнаты, где пользователь хост/победитель, при удалении аккаунта не удаляем — только отвязываем
   has_many :hosted_games, class_name: "Game", foreign_key: :host_id, dependent: :nullify, inverse_of: :host
   has_many :won_games, class_name: "Game", foreign_key: :winner_id, dependent: :nullify, inverse_of: :winner
 

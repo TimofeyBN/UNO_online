@@ -391,3 +391,90 @@ a { color: inherit; }
   color: var(--text);
   border-color: var(--text-faint);
 }
+
+/* ============ игровой стол (простой стиль) ============ */
+.game-content { max-width: 760px; }
+.game-table { display: flex; flex-direction: column; gap: var(--space-5); margin-top: var(--space-4); }
+
+.turn-banner {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.turn-banner.is-my-turn { color: var(--suit-green); }
+.turn-banner__direction { font-size: 1.4rem; color: var(--text-faint); }
+
+.opponents { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-3); }
+.opponent {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.opponent.is-current { border-color: var(--suit-yellow); }
+.opponent__name { font-weight: 600; }
+.opponent__count { font-size: 0.82rem; color: var(--text-muted); }
+.uno-badge { font-size: 0.72rem; font-weight: 700; color: var(--suit-red); }
+
+.table-center { display: flex; justify-content: center; align-items: center; gap: var(--space-6); padding: var(--space-5) 0; }
+.draw-pile, .top-card { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); }
+.draw-pile small, .top-card small { color: var(--text-faint); font-size: 0.75rem; }
+
+.table-actions { display: flex; gap: var(--space-3); justify-content: center; min-height: 44px; }
+
+/* карта */
+.uno-card {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 92px;
+  border-radius: 10px;
+  border: 3px solid #F1EFEA;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.7rem;
+  color: #fff;
+  box-shadow: var(--shadow-card);
+  user-select: none;
+}
+.uno-card--red { background: var(--suit-red); }
+.uno-card--yellow { background: var(--suit-yellow); color: #2a2208; }
+.uno-card--green { background: var(--suit-green); }
+.uno-card--blue { background: var(--suit-blue); }
+.uno-card--wild { background: #1b1a22; border-color: var(--text-muted); }
+.uno-card--back { background: #1b1a22; border-color: var(--suit-red); color: var(--suit-red); font-size: 1.1rem; }
+
+/* рука игрока */
+.hand { display: flex; flex-wrap: wrap; gap: var(--space-2); justify-content: center; }
+.hand-card { display: inline-flex; flex-direction: column; align-items: center; gap: 6px; opacity: 0.55; text-decoration: none; }
+.hand-card.is-playable { opacity: 1; cursor: pointer; transition: transform 0.12s ease; }
+.hand-card.is-playable:hover { transform: translateY(-8px); }
+
+.color-picker { display: flex; gap: 4px; }
+.color-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #F1EFEA; display: inline-block; }
+.color-dot--red { background: var(--suit-red); }
+.color-dot--yellow { background: var(--suit-yellow); }
+.color-dot--green { background: var(--suit-green); }
+.color-dot--blue { background: var(--suit-blue); }
+
+.table-result { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4); margin-top: var(--space-5); }
+
+/* штраф +2/+4 и сыграть сразу несколько одинаковых карт */
+.penalty-banner {
+  background: rgba(225, 75, 75, 0.12);
+  border: 1px solid var(--suit-red);
+  color: var(--text);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: 0.9rem;
+}
+.all-link { font-size: 0.75rem; font-weight: 600; color: var(--primary); text-decoration: none; }
+.all-link:hover { text-decoration: underline; }
+.all-label { font-size: 0.7rem; color: var(--text-muted); align-self: center; }
