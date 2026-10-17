@@ -32,7 +32,17 @@ class Game < ApplicationRecord
   # перед удалением комнаты нужно разорвать эту ссылку, иначе FK не даст удалить игроков
   before_destroy :clear_current_player, prepend: true
 
+  # Главная страница подписана на поток "lobby" (ActionCable). Когда меняется то, что на ней видно
+  # (появилась или исчезла публичная комната, изменился её статус), просим все главные обновиться.
+  after_create_commit  { self.class.broadcast_lobby_refresh if visibility == "public" }
+  after_update_commit  { self.class.broadcast_lobby_refresh if visibility == "public" && saved_change_to_status? }
+  after_destroy_commit { self.class.broadcast_lobby_refresh if visibility == "public" }
+
   scope :publicly_listed, -> { where(visibility: "public").order(created_at: :desc) }
+
+  def self.broadcast_lobby_refresh
+    Turbo::StreamsChannel.broadcast_refresh_to("lobby")
+  end
 
   STATUSES.each do |name|
     define_method(:"#{name}?") { status == name }

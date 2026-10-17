@@ -247,4 +247,37 @@ class GameTest < ActiveSupport::TestCase
 
     assert_equal 2, game.reload.players.find_by(user: @anna).hand.size
   end
+
+  # ---------- Обновление главной страницы (ActionCable) ----------
+
+  # Запоминает, в какие потоки пытались отправить «обнови страницу»
+  def refresh_streams
+    streams = []
+    Turbo::StreamsChannel.stub(:broadcast_refresh_to, ->(*args, **_options) { streams << args }) { yield }
+    streams.flatten
+  end
+
+  test "создание публичной комнаты просит главную страницу обновиться" do
+    assert_includes refresh_streams { Game.create!(visibility: "public") }, "lobby"
+  end
+
+  test "приватная комната главную не трогает" do
+    assert_empty refresh_streams { Game.create!(visibility: "private") }
+  end
+
+  test "вход игрока в публичную комнату обновляет главную (счётчик игроков)" do
+    game = create_game(@anna)
+    assert_includes refresh_streams { game.add_player!(@boris) }, "lobby"
+  end
+
+  test "смена статуса комнаты обновляет главную" do
+    game = create_game(@anna)
+    assert_includes refresh_streams { game.update!(status: "playing") }, "lobby"
+  end
+
+  test "выход игрока из публичной комнаты тоже обновляет главную" do
+    game = create_game(@anna)
+    game.add_player!(@boris)
+    assert_includes refresh_streams { game.remove_player!(@boris) }, "lobby"
+  end
 end

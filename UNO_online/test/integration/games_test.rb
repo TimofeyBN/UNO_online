@@ -270,4 +270,11 @@ class GamesTest < ActionDispatch::IntegrationTest
 
     assert_includes response.body, "Штраф +2"
   end
+
+  test "главная подписана на живые обновления списка комнат" do
+    get root_path
+
+    assert_select "turbo-cable-stream-source"
+    assert_select "meta[name='turbo-refresh-method'][content='morph']"
+  end
 end

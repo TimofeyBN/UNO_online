@@ -1,5 +1,12 @@
 <% content_for :title, "Uno Online" %>
 
+<%# Живое обновление списка комнат. Сервер шлёт сигнал «обнови страницу» по потоку "lobby",
+    а страница перерисовывается «морфингом» — позиция прокрутки и введённый текст сохраняются. %>
+<% content_for :head do %>
+  <%= turbo_refreshes_with method: :morph, scroll: :preserve %>
+<% end %>
+<%= turbo_stream_from "lobby" %>
+
 <div class="main-page">
   <header class="main-header">
     <%= render "shared/logo" %>
@@ -11,7 +18,7 @@
   </header>
 
   <div class="main-content">
-    <section class="create-room">
+    <section class="create-room" id="create-room" data-turbo-permanent>
       <h2 class="room-list__title">Создать комнату</h2>
 
       <%= form_with url: games_path, method: :post, local: true, class: "create-room-form" do %>
@@ -44,7 +51,7 @@
       <% end %>
     </section>
 
-    <section class="join-room">
+    <section class="join-room" id="join-room" data-turbo-permanent>
       <h2 class="room-list__title">Войти по коду</h2>
       <%= form_with url: join_games_path, method: :post, local: true, class: "join-form" do |f| %>
         <div class="field">
