@@ -91,11 +91,19 @@ jobs:
           working-directory: UNO_online
           bundler-cache: true
 
+      - name: Версии (для отладки)
+        run: |
+          ruby -v
+          bundle list | grep -E " (pg|rails|activerecord|actioncable|turbo-rails|puma) " || true
+
       - name: Проверка автозагрузки классов (Zeitwerk)
         run: bundle exec rails zeitwerk:check
 
-      - name: Подготовка тестовой БД и запуск тестов
-        run: bundle exec rails db:test:prepare test
+      - name: Подготовка тестовой БД
+        run: bundle exec rails db:test:prepare
+
+      - name: Автотесты
+        run: bundle exec rails test
 
   # ---------- Доставка (CD): сборка Docker-образа ----------
   # Запускается только после успешных проверок и только на main.

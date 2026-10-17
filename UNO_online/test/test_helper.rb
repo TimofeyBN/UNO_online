@@ -4,8 +4,9 @@ require "rails/test_help"
 
 module ActiveSupport
   class TestCase
-    # Run tests in parallel with specified workers
-    parallelize(workers: :number_of_processors, with: :threads)
+    # Тесты идут по очереди, без параллельного запуска: почти все создают пользователей
+    # с одними и теми же email (anna@example.com), и в нескольких потоках такие тесты
+    # блокируют друг друга в БД. Весь набор при этом выполняется за несколько секунд.
 
     # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
     fixtures :all
