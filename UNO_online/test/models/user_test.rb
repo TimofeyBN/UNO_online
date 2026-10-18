@@ -31,5 +31,4 @@ class UserTest < ActiveSupport::TestCase
     user = create_user("tim")
     assert_not_equal PASSWORD, user.password_digest
   end
-
 end
