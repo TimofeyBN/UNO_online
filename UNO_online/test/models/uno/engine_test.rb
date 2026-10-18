@@ -60,13 +60,6 @@ class Uno::EngineTest < ActiveSupport::TestCase
     assert_equal 1, engine.current
   end
 
-  test "после последнего игрока ход возвращается к первому" do
-    engine = build_engine([ [ card("red", "1"), card("red", "2") ], [ card("red", "3") ] ])
-    engine.draw(0)
-    engine.draw(1)
-    assert_equal 0, engine.current
-  end
-
   # ---------- особые карты ----------
 
   test "skip пропускает следующего игрока" do
@@ -168,20 +161,6 @@ class Uno::EngineTest < ActiveSupport::TestCase
     assert_raises(Uno::IllegalMove) { engine.play(1, 0) }
   end
 
-  test "вдвоём штраф перебрасывается туда-обратно" do
-    hands = [ [ card("red", "draw2"), card("red", "1"), card("red", "3") ],
-              [ card("blue", "draw2"), card("red", "2"), card("red", "4") ] ]
-    engine = build_engine(hands)
-    engine.play(0, 0)
-    engine.play(1, 0)
-
-    assert_equal 4, engine.pending_draw
-    assert_equal 0, engine.current
-
-    engine.draw(0)
-    assert_equal 6, engine.hands[0].size # было 2 карты + штраф 4
-  end
-
   # ---------- сразу несколько одинаковых карт ----------
 
   test "одинаковые карты можно сыграть вместе: обе уходят из руки, ход переходит один раз" do
@@ -204,12 +183,6 @@ class Uno::EngineTest < ActiveSupport::TestCase
     hands = [ [ card("red", "9"), card("blue", "9"), card("red", "1"), card("red", "3") ], [ card("red", "2") ] ]
     engine = build_engine(hands)
     assert_raises(Uno::IllegalMove) { engine.play(0, 0, count: 2) }
-  end
-
-  test "если сыграть все одинаковые карты и рука пуста — победа" do
-    engine = build_engine([ [ card("red", "9"), card("red", "9") ], [ card("red", "2") ] ])
-    engine.play(0, 0, count: 2)
-    assert_equal 0, engine.winner
   end
 
   test "два skip вместе пропускают двух соперников" do

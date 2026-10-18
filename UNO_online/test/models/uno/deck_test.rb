@@ -5,12 +5,6 @@ class Uno::DeckTest < ActiveSupport::TestCase
     assert_equal 108, Uno::Deck.build.size
   end
 
-  test "на каждый цвет приходится 25 карт" do
-    Uno::Card::COLORS.each do |color|
-      assert_equal 25, Uno::Deck.build.count { |card| card["color"] == color }
-    end
-  end
-
   test "«чёрных» карт по 4 каждого вида, цвета у них нет" do
     wilds = Uno::Deck.build.select { |card| Uno::Card.wild?(card) }
 

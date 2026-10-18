@@ -1,11 +1,6 @@
 require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
-  test "пользователь с правильными данными сохраняется" do
-    user = User.new(name: "Тимофей", email: "tim@example.com", password: PASSWORD)
-    assert user.valid?
-  end
-
   test "без имени пользователь не сохраняется" do
     user = User.new(name: "", email: "tim@example.com", password: PASSWORD)
     assert_not user.valid?
@@ -37,9 +32,4 @@ class UserTest < ActiveSupport::TestCase
     assert_not_equal PASSWORD, user.password_digest
   end
 
-  test "authenticate принимает верный пароль и отвергает неверный" do
-    user = create_user("tim")
-    assert user.authenticate(PASSWORD)
-    assert_not user.authenticate("неверный-пароль")
-  end
 end

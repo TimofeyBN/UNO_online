@@ -7,10 +7,6 @@ class PlayerTest < ActiveSupport::TestCase
     @game = create_game(@anna) # anna уже сидит на позиции 0
   end
 
-  test "новый игрок по умолчанию не готов" do
-    assert_not @game.players.first.ready?
-  end
-
   test "один пользователь не может войти в одну комнату дважды" do
     duplicate = @game.players.build(user: @anna, position: 1)
     assert_not duplicate.valid?

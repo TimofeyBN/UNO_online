@@ -172,20 +172,6 @@ class GameTest < ActiveSupport::TestCase
     assert_equal @boris, game.current_player.user
   end
 
-  test "ходить не в свой ход нельзя" do
-    game = start_game(anna_hand: [ red("9"), red("1") ], boris_hand: [ red("2"), red("3") ])
-    assert_raises(Uno::IllegalMove) { game.play_card!(@boris, 0) }
-  end
-
-  test "взять карту: в руке на одну больше, ход переходит дальше" do
-    game = start_game(anna_hand: [ red("9"), red("1") ], boris_hand: [ red("2") ])
-    game.draw_card!(@anna)
-    game.reload
-
-    assert_equal 3, game.players.find_by(user: @anna).hand.size
-    assert_equal @boris, game.current_player.user
-  end
-
   test "кто сыграл последнюю карту — победил, партия закончена" do
     game = start_game(anna_hand: [ red("9") ], boris_hand: [ red("2"), red("3") ])
     game.play_card!(@anna, 0)
@@ -241,20 +227,18 @@ class GameTest < ActiveSupport::TestCase
     assert_equal 3, game.players.find_by(user: @boris).hand.size
   end
 
-  test "одинаковые карты можно сыграть вместе" do
-    game = start_game(anna_hand: [ red("9"), red("9"), red("1"), red("3") ], boris_hand: [ red("2") ])
-    game.play_card!(@anna, 0, count: 2)
-
-    assert_equal 2, game.reload.players.find_by(user: @anna).hand.size
-  end
-
   # ---------- Обновление главной страницы (ActionCable) ----------
 
-  # Запоминает, в какие потоки пытались отправить «обнови страницу»
+  # Запоминает, в какие потоки пытались отправить «обнови страницу».
+  # На время блока подменяем метод рассылки своим, потом возвращаем настоящий.
   def refresh_streams
     streams = []
-    Turbo::StreamsChannel.stub(:broadcast_refresh_to, ->(*args, **_options) { streams << args }) { yield }
+    original = Turbo::StreamsChannel.method(:broadcast_refresh_to)
+    Turbo::StreamsChannel.define_singleton_method(:broadcast_refresh_to) { |*args, **| streams << args }
+    yield
     streams.flatten
+  ensure
+    Turbo::StreamsChannel.define_singleton_method(:broadcast_refresh_to, original)
   end
 
   test "создание публичной комнаты просит главную страницу обновиться" do

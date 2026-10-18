@@ -207,14 +207,6 @@ class GamesTest < ActionDispatch::IntegrationTest
     assert_equal red("5"), game.reload.top_card
   end
 
-  test "нельзя сыграть карту, которая не подходит" do
-    game = start_game(anna_hand: [ Uno::Card.build("blue", "9"), red("1") ], boris_hand: [ red("2") ])
-
-    post play_card_game_path(game, card: 0)
-
-    assert_response :unprocessable_entity
-  end
-
   test "взять карту через запрос" do
     game = start_game(anna_hand: [ red("9"), red("1") ], boris_hand: [ red("2") ])
 

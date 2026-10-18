@@ -2,9 +2,7 @@
 
 <%# Живое обновление списка комнат. Сервер шлёт сигнал «обнови страницу» по потоку "lobby",
     а страница перерисовывается «морфингом» — позиция прокрутки и введённый текст сохраняются. %>
-<% content_for :head do %>
-  <%= turbo_refreshes_with method: :morph, scroll: :preserve %>
-<% end %>
+<% turbo_refreshes_with method: :morph, scroll: :preserve %>
 <%= turbo_stream_from "lobby" %>
 
 <div class="main-page">
